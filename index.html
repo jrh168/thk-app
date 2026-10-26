@@ -250,19 +250,14 @@ h3 { font-size: 16px; margin-bottom: 10px; }
     </div>
 </div>
 
-<div class="version-info">v9.9.7 ｜ 下拉刷新题库版</div>
+<div class="version-info">v10.0.0</div>
 
 <script>
 'use strict';
 
 const LOGO_URL = 'https://i.postimg.cc/mkzHkLNd/THKlogo-3340-1-removebg-preview.png';
 
-// =====================================================================
-// 🚨【重要提示】每次你修改了这个代码文件（比如添加了新用户），
-// 请务必把下面的日期改成你修改代码当天的日期！
-// 如果用户清空了缓存，系统会以这个日期为起点重新计算58天，防止无限白嫖。
-// =====================================================================
-const BUILD_TIME = new Date('2026-10-22T00:00:00').getTime(); 
+const BUILD_TIME = new Date('2026-10-26T00:00:00').getTime();
 
 /* ============================================================
    一、Storage 封装（自动回退内存存储）
@@ -306,23 +301,101 @@ function storageRemove(key) {
 function isPersistentStorage() { getStorage(); return __storageIsPersistent; }
 
 /* ============================================================
-   二、基础配置
+   二、基础配置（名单加载加固版）
    ============================================================ */
-let WHITELIST = []; // 从 users.json 动态加载
+let WHITELIST = [];
 
-// 加载名单的函数（带时间戳防缓存）
-async function loadUsers() {
+const USERS_DATA_VERSION = 'v20261026_01';
+const USERS_CACHE_HOURS  = 6;
+const USERS_SOURCES = [
+    'https://cdn.jsdelivr.net/gh/jrh168/thk-data@main/banks/users.json',
+    'https://fastly.jsdelivr.net/gh/jrh168/thk-data@main/banks/users.json',
+    'https://raw.githubusercontent.com/jrh168/thk-data/main/banks/users.json'
+];
+const USERS_PURGE_URLS = [
+    'https://purge.jsdelivr.net/gh/jrh168/thk-data@main/banks/users.json'
+];
+const USERS_CACHE_KEY = 'thk_users_cache_' + USERS_DATA_VERSION;
+
+function normalizeUsers(list) {
+    if (!Array.isArray(list)) return [];
+    return list
+        .filter(u => u && u.phone != null)
+        .map(u => ({
+            ...u,
+            phone: String(u.phone).trim(),
+            name: String(u.name ?? '').trim(),
+            job: String(u.job ?? '').trim()
+        }))
+        .filter(u => /^1\d{10}$/.test(u.phone));
+}
+
+function readUsersCache(allowStale) {
     try {
-        const res = await fetch('https://cdn.jsdelivr.net/gh/jrh168/thk-data@main/banks/users.json?t=' + Date.now());
-        if (res.ok) {
-            WHITELIST = await res.json();
-            console.log("名单加载成功，共 " + WHITELIST.length + " 人");
-        } else {
-            console.error("名单加载失败，请检查 users.json 是否存在");
+        const raw = storageGet(USERS_CACHE_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (!parsed || !Array.isArray(parsed.data) || !parsed.data.length) return null;
+        if (!allowStale && Date.now() - (parsed._time || 0) > USERS_CACHE_HOURS * 3600000) {
+            return null;
         }
-    } catch (e) {
-        console.error("名单格式错误，请检查 JSON 格式是否正确（比如少逗号、多了注释）", e);
+        return parsed.data;
+    } catch (e) { return null; }
+}
+
+function writeUsersCache(list) {
+    try {
+        storageSet(USERS_CACHE_KEY, JSON.stringify({ _time: Date.now(), data: list }));
+    } catch (e) {}
+}
+
+async function fetchUsersFromSource(baseUrl) {
+    const url = baseUrl + (baseUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+    const res = await fetch(url, { cache: 'no-cache' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    let json;
+    try {
+        json = await res.json();
+    } catch (parseErr) {
+        throw new Error('JSON 解析失败：' + parseErr.message);
     }
+    const list = normalizeUsers(json);
+    if (!list.length) throw new Error('名单为空或字段格式不正确');
+    return list;
+}
+
+async function loadUsers(forceRefresh) {
+    if (!forceRefresh) {
+        const cached = readUsersCache(false);
+        if (cached) {
+            WHITELIST = cached;
+            console.log('名单命中本地缓存，共 ' + WHITELIST.length + ' 人');
+            return { ok: true, fromCache: true, count: WHITELIST.length };
+        }
+    }
+    let lastErr = null;
+    for (const url of USERS_SOURCES) {
+        try {
+            const list = await fetchUsersFromSource(url);
+            WHITELIST = list;
+            writeUsersCache(list);
+            let host = '';
+            try { host = new URL(url).host; } catch (e) {}
+            console.log('名单加载成功（' + host + '），共 ' + WHITELIST.length + ' 人');
+            return { ok: true, fromCache: false, count: WHITELIST.length, source: url };
+        } catch (e) {
+            lastErr = e;
+            console.warn('名单源失败：' + url + ' -> ' + e.message);
+        }
+    }
+    const stale = readUsersCache(true);
+    if (stale) {
+        WHITELIST = stale;
+        console.warn('所有源均失败，使用过期缓存，共 ' + WHITELIST.length + ' 人');
+        return { ok: true, fromCache: true, stale: true, count: WHITELIST.length };
+    }
+    console.error('名单加载失败：所有源均不可用', lastErr);
+    return { ok: false, error: lastErr };
 }
 
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/jrh168/thk-data@main/banks/';
@@ -349,7 +422,7 @@ const SCORE_MAX     = 20;
    三、单端登录控制变量
    ============================================================ */
 let __mySessionId = null;
-let currentQuizMode = 'practice'; // 记录当前练习界面的模式，防止题库串用
+let currentQuizMode = 'practice';
 
 /* ============================================================
    四、小工具
@@ -526,14 +599,17 @@ let currentUser = null;
 function newQuiz() { return { list: [], index: 0, ans: {}, sub: {}, rev: {} }; }
 const quiz = { practice: newQuiz(), featured: newQuiz(), wrong: newQuiz(), vip: newQuiz() };
 const exam = { list: [], index: 0, ans: {}, rev: {}, timeLeft: EXAM_MINUTES * 60, timer: null, active: false };
-let examEndTime = 0; // 记录考试结束的绝对时间戳
+let examEndTime = 0;
 
 /* ============================================================
    九、登录 / 会话
    ============================================================ */
 const $ = id => document.getElementById(id);
-function checkTimeWindow() { return { ok: true }; }
-function findUser(phone) { return WHITELIST.find(u => u.phone === phone); }
+function findUser(phone) {
+    const p = String(phone || '').trim();
+    if (!p) return undefined;
+    return WHITELIST.find(u => String(u.phone).trim() === p);
+}
 
 function calculateUserExpire(user) {
     if (user.expire === '长期') {
@@ -545,7 +621,7 @@ function calculateUserExpire(user) {
     let firstLoginTime = storageGet(firstLoginKey);
 
     if (!firstLoginTime) {
-        firstLoginTime = BUILD_TIME; 
+        firstLoginTime = BUILD_TIME;
         storageSet(firstLoginKey, firstLoginTime);
     } else {
         firstLoginTime = parseInt(firstLoginTime, 10);
@@ -566,15 +642,16 @@ function calculateUserExpire(user) {
 function validateUser(user) {
     if (!user) return { ok: false, msg: '账号不存在，请联系管理员' };
 
+    const now = new Date();
+    if (now.getFullYear() < 2024 || now.getTime() < BUILD_TIME - 30 * 86400000) {
+        return { ok: false, msg: '系统时间异常，请校准您的电脑时间后再试' };
+    }
+
     const expInfo = calculateUserExpire(user);
     if (expInfo.isLongTerm) return { ok: true };
 
-    const now = new Date();
     if (now > expInfo.expireDate) {
         return { ok: false, msg: `账号已到期（${expInfo.expireStr}），请联系管理员续期` };
-    }
-    if (now.getFullYear() < 2024) {
-        return { ok: false, msg: `系统时间异常，请校准您的电脑时间后再试` };
     }
     return { ok: true };
 }
@@ -660,7 +737,6 @@ function loginSuccess(user) {
 
 function logout() { showConfirm('确定退出登录吗？', doLogout); }
 function doLogout() {
-    /* 退出时清除题库缓存 */
     try {
         const keysToRemove = [];
         for (let i = 0; i < window.localStorage.length; i++) {
@@ -680,6 +756,9 @@ function doLogout() {
 
     if (exam.timer) { clearInterval(exam.timer); exam.timer = null; }
     exam.active = false;
+    exam.list = []; exam.ans = {}; exam.rev = {}; exam.index = 0;
+    exam.timeLeft = EXAM_MINUTES * 60; examEndTime = 0;
+
     currentUser = null;
     banks.practice = []; banks.featured = []; banks.vip = [];
     quiz.practice = newQuiz(); quiz.featured = newQuiz(); quiz.wrong = newQuiz(); quiz.vip = newQuiz();
@@ -701,6 +780,8 @@ function doLogout() {
 function resetAllPanels() {
     if (exam.timer) { clearInterval(exam.timer); exam.timer = null; }
     exam.active = false;
+    exam.list = []; exam.ans = {}; exam.rev = {}; exam.index = 0;
+    exam.timeLeft = EXAM_MINUTES * 60; examEndTime = 0;
 
     $('bankInfo').innerHTML = '📚 正在加载题库...';
     $('practiceInfo').classList.add('hidden'); $('featuredInfo').classList.add('hidden');
@@ -716,7 +797,7 @@ function resetAllPanels() {
     $('scoreHistoryContent').innerHTML = '';
     $('examTimer').textContent = `${String(EXAM_MINUTES).padStart(2, '0')}:00`;
     $('examTimer').style.color = '#1890ff';
-    
+
     updateBtnActive(null);
 }
 
@@ -740,7 +821,13 @@ async function fetchBank(fileName, cacheKey) {
         storageSet(finalCacheKey, JSON.stringify({ _time: Date.now(), data }));
         return data;
     } catch (e) {
-        try { const raw = storageGet(cacheKey); if (raw) return JSON.parse(raw).data; } catch (e2) {}
+        try {
+            const raw = storageGet(finalCacheKey);
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                if (parsed && parsed.data) return parsed.data;
+            }
+        } catch (e2) {}
         throw e;
     }
 }
@@ -769,8 +856,11 @@ async function loadBanksForJob(job) {
             banks.vip = [];
         }
     } catch (e) { banks.vip = []; }
-    if (practiceCount === 0 && featuredCount === 0) { $('bankInfo').innerHTML = '❌ 题库加载失败或内容为空，请检查网络后重试'; return; }
-    
+    if (practiceCount === 0 && featuredCount === 0 && vipCount === 0) {
+        $('bankInfo').innerHTML = '❌ 题库加载失败或内容为空，请检查网络后重试';
+        return;
+    }
+
     let infoHtml = `📚 <b>${escapeHtml(job)}</b> 题库已加载 ｜ 📖 题库练习：<b>${practiceCount}</b> 题 ｜ ⭐ 高频率题：<b>${featuredCount}</b> 题`;
     if (vipCount > 0) {
         infoHtml += ` ｜ 👑 VIP：<b>${vipCount}</b> 题`;
@@ -900,11 +990,17 @@ function switchPanel(type) {
         exam.timeLeft = Math.max(0, Math.round((examEndTime - Date.now()) / 1000));
         if (exam.timeLeft <= 0) {
             doSubmitExam(true);
-            return;
+            $('examResult').classList.add('hidden');
+            showToast('考试时间到，已自动交卷；点「开始模拟考试」可查看成绩');
         }
     }
 
     if (type === 'practice' || type === 'vip') {
+        if (type === 'vip' && (!banks.vip || banks.vip.length === 0)) {
+            showToast('该工种暂无 VIP 题库，请联系管理员补充');
+            updateBtnActive(null);
+            return;
+        }
         currentQuizMode = type;
         if (quiz[type].list.length === 0) initQuiz(type);
         if (quiz[type].list.length > 0) {
@@ -943,22 +1039,22 @@ function switchPanel(type) {
             if (merged.length < 10) { showToast('题库题目太少，无法开始考试'); return; }
             const count = Math.min(EXAM_MAX_Q, merged.length);
             exam.list = shuffle(merged).slice(0, count);
-            exam.index = 0; exam.ans = {}; exam.rev = {}; 
-            exam.timeLeft = EXAM_MINUTES * 60; 
+            exam.index = 0; exam.ans = {}; exam.rev = {};
+            exam.timeLeft = EXAM_MINUTES * 60;
             exam.active = true;
-            
-            examEndTime = Date.now() + exam.timeLeft * 1000; 
-            
+
+            examEndTime = Date.now() + exam.timeLeft * 1000;
+
             if (exam.timer) clearInterval(exam.timer);
-            exam.timer = setInterval(() => { 
+            exam.timer = setInterval(() => {
                 const now = Date.now();
                 exam.timeLeft = Math.max(0, Math.round((examEndTime - now) / 1000));
-                updateTimerDisplay(); 
-                if (exam.timeLeft <= 0) { 
-                    clearInterval(exam.timer); 
-                    exam.timer = null; 
-                    doSubmitExam(true); 
-                } 
+                updateTimerDisplay();
+                if (exam.timeLeft <= 0) {
+                    clearInterval(exam.timer);
+                    exam.timer = null;
+                    doSubmitExam(true);
+                }
             }, 1000);
             updateTimerDisplay();
         } else {
@@ -999,11 +1095,14 @@ function restartQuiz(mode) {
     }
     const s = quiz[mode];
     s.index = 0; s.ans = {}; s.sub = {}; s.rev = {};
-    showToast('已重新开始本次练习'); 
-    if(mode !== 'wrong') {
-        $('practiceInfo').classList.remove('hidden');
-    } else {
+    showToast('已重新开始本次练习');
+
+    if (mode === 'wrong') {
         $('wrongInfo').classList.remove('hidden');
+    } else if (mode === 'featured') {
+        $('featuredInfo').classList.remove('hidden');
+    } else {
+        $('practiceInfo').classList.remove('hidden');
     }
     renderQuiz(mode);
 }
@@ -1096,15 +1195,18 @@ function doSubmitExam(auto) {
     exam.active = false;
     if (exam.timer) { clearInterval(exam.timer); exam.timer = null; }
     if (auto) showToast('考试时间到，已自动交卷！');
-    
+
     const usedSeconds = EXAM_MINUTES * 60 - Math.max(0, exam.timeLeft);
-    let correctCount = 0; const wrongList = [];
+    let correctCount = 0;
+    let unansweredCount = 0;
+    const wrongList = [];
 
     exam.list.forEach(q => {
         const mine = exam.ans[q.uid] || '';
+        if (!mine) { unansweredCount++; return; }
         const correct = toLetters(q.correctAnswer, q.options);
         const userLetters = toLetters(mine, q.options);
-        if (mine && correct && userLetters === correct) {
+        if (correct && userLetters === correct) {
             correctCount++;
         } else {
             wrongList.push(q);
@@ -1116,21 +1218,22 @@ function doSubmitExam(auto) {
     const passed = pct >= PASS_SCORE;
     saveScoreRecord(pct, correctCount, exam.list.length, usedSeconds); renderScoreHistory();
     $('examInfo').classList.add('hidden');
-    
+
     updateBtnActive(null);
-    
+
     const resultEl = $('examResult'); resultEl.classList.remove('hidden');
+    const totalWrong = exam.list.length - correctCount;
     resultEl.innerHTML = `
         <h2>考试结果${auto ? '（时间到，自动交卷）' : ''}</h2>
         <div class="result-score ${passed ? 'result-pass' : 'result-fail'}">${pct}分</div>
         <div style="font-size:16px;">${passed ? '🎉 恭喜通过！' : '😢 很遗憾，未通过'}</div>
         <div class="result-details">
             <div>✅ 正确题数：${correctCount} 题</div>
-            <div>❌ 错误题数：${exam.list.length - correctCount} 题</div>
+            <div>❌ 错误题数：${totalWrong} 题${unansweredCount ? `（含未作答 ${unansweredCount} 题）` : ''}</div>
             <div>📝 总题数：${exam.list.length} 题</div>
             <div>⏱️ 用时：${formatDuration(usedSeconds)}</div>
             <div>🎯 及格线：${PASS_SCORE} 分</div>
-            ${wrongList.length ? `<div style="color:#fa541c;margin-top:8px;">⚠️ 本次错题 ${wrongList.length} 题已加入「错题练习」</div>` : ''}
+            ${wrongList.length ? `<div style="color:#fa541c;margin-top:8px;">⚠️ 本次答错 ${wrongList.length} 题已加入「错题练习」（未作答不计入）</div>` : ''}
         </div>
         <button class="exam-btn-control" id="resetExamBtn">重新考试</button>
     `;
@@ -1138,9 +1241,11 @@ function doSubmitExam(auto) {
 }
 
 function resetExam() {
-    $('examResult').classList.add('hidden'); 
-    exam.active = false; 
-    exam.list = []; // 清空，以便下次重新开始
+    $('examResult').classList.add('hidden');
+    exam.active = false;
+    exam.list = [];
+    exam.ans = {}; exam.rev = {}; exam.index = 0;
+    exam.timeLeft = EXAM_MINUTES * 60; examEndTime = 0;
     $('examTimer').style.color = '#1890ff'; $('examTimer').textContent = `${String(EXAM_MINUTES).padStart(2, '0')}:00`;
     updateBtnActive(null);
 }
@@ -1227,9 +1332,9 @@ function bindEvents() {
     $('phoneInput').addEventListener('keydown', e => { if (e.key === 'Enter') $('codeInput').focus(); });
     $('codeInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkLogin(); });
     $('logoutBtn').addEventListener('click', logout);
-    
+
     $('startPracticeBtn').addEventListener('click', () => switchPanel('practice'));
-    
+
     $('startVipPracticeBtn').addEventListener('click', () => {
         if (!currentUser || (!currentUser.isAdmin && !currentUser.isVIP)) {
             showConfirm('你还不是VIP，请联系管理员', () => {});
@@ -1242,19 +1347,19 @@ function bindEvents() {
     $('practiceNextBtn').addEventListener('click', () => goQuiz(currentQuizMode, 1));
     $('practiceAnswerBtn').addEventListener('click', () => toggleQuizAnswer(currentQuizMode));
     $('practiceRestartBtn').addEventListener('click', () => restartQuiz(currentQuizMode));
-    
+
     $('startFeaturedBtn').addEventListener('click', () => switchPanel('featured'));
     $('featuredPrevBtn').addEventListener('click', () => goQuiz('featured', -1));
     $('featuredNextBtn').addEventListener('click', () => goQuiz('featured', 1));
     $('featuredAnswerBtn').addEventListener('click', () => toggleQuizAnswer('featured'));
     $('featuredRestartBtn').addEventListener('click', () => restartQuiz('featured'));
-    
+
     $('startWrongBtn').addEventListener('click', () => switchPanel('wrong'));
     $('wrongPrevBtn').addEventListener('click', () => goQuiz('wrong', -1));
     $('wrongNextBtn').addEventListener('click', () => goQuiz('wrong', 1));
     $('wrongClearBtn').addEventListener('click', clearWrongBook);
     $('wrongRestartBtn').addEventListener('click', () => restartQuiz('wrong'));
-    
+
     $('startExamBtn').addEventListener('click', () => switchPanel('exam'));
     $('examPrevBtn').addEventListener('click', () => { if (exam.index > 0) { exam.index--; renderExam(); } });
     $('examNextBtn').addEventListener('click', () => { if (exam.index < exam.list.length - 1) { exam.index++; renderExam(); } });
@@ -1270,6 +1375,8 @@ function bindEvents() {
                 storageRemove('thk_session');
                 if (exam.timer) { clearInterval(exam.timer); exam.timer = null; }
                 exam.active = false;
+                exam.list = []; exam.ans = {}; exam.rev = {}; exam.index = 0;
+                exam.timeLeft = EXAM_MINUTES * 60; examEndTime = 0;
                 currentUser = null;
                 banks.practice = []; banks.featured = []; banks.vip = [];
                 quiz.practice = newQuiz(); quiz.featured = newQuiz(); quiz.wrong = newQuiz(); quiz.vip = newQuiz();
@@ -1288,129 +1395,11 @@ function bindEvents() {
 }
 
 /* ============================================================
-   ★★★ 十七、下拉刷新题库 ★★★
-   ============================================================ */
-let __ptrIndicator = null;
-let __ptrStartY = 0;
-let __ptrPulling = false;
-let __ptrRefreshing = false;
-const __PTR_THRESHOLD = 80;
-
-function setupPullToRefresh() {
-    __ptrIndicator = document.createElement('div');
-    __ptrIndicator.style.cssText = [
-        'position: fixed', 'top: 0', 'left: 0', 'right: 0', 'height: 0',
-        'display: flex', 'align-items: center', 'justify-content: center',
-        'background: linear-gradient(180deg, #1890ff, #40a9ff)', 'color: #fff',
-        'font-size: 13px', 'font-weight: 600', 'overflow: hidden',
-        'transition: height 0.15s ease', 'z-index: 9999',
-        'padding-top: env(safe-area-inset-top)', 'box-shadow: 0 2px 8px rgba(24,144,255,.3)'
-    ].join(';');
-    __ptrIndicator.textContent = '下拉刷新题库';
-    document.body.appendChild(__ptrIndicator);
-
-    document.addEventListener('touchstart', (e) => {
-        if (!currentUser) return;
-        if (__ptrRefreshing) return;
-        if (window.scrollY > 0) return;
-        __ptrStartY = e.touches[0].clientY;
-        __ptrPulling = true;
-    }, { passive: true });
-
-    document.addEventListener('touchmove', (e) => {
-        if (!__ptrPulling) return;
-        const dy = e.touches[0].clientY - __ptrStartY;
-        if (dy > 0 && window.scrollY === 0) {
-            const h = Math.min(dy * 0.45, 90);
-            __ptrIndicator.style.height = h + 'px';
-            __ptrIndicator.textContent = dy > __PTR_THRESHOLD ? '松手刷新题库' : '下拉刷新题库';
-        } else if (dy < -10) {
-            __ptrPulling = false;
-            __ptrIndicator.style.height = '0px';
-        }
-    }, { passive: true });
-
-    document.addEventListener('touchend', (e) => {
-        if (!__ptrPulling) return;
-        const endY = e.changedTouches[0] ? e.changedTouches[0].clientY : 0;
-        const dy = endY - __ptrStartY;
-        __ptrPulling = false;
-        __ptrIndicator.style.height = '0px';
-        if (dy > __PTR_THRESHOLD) {
-            doRefreshBank();
-        }
-    });
-}
-
-async function doRefreshBank() {
-    if (__ptrRefreshing) return;
-    if (!currentUser) return;
-
-    const job = currentUser.isAdmin ? $('jobSelector').value : currentUser.job;
-    if (!job) return;
-
-    __ptrRefreshing = true;
-    __ptrIndicator.textContent = '🔄 正在刷新题库...';
-    __ptrIndicator.style.height = '40px';
-
-    try {
-        $('bankInfo').innerHTML = '🔄 正在清除本地缓存...';
-        try {
-            const keysToRemove = [];
-            for (let i = 0; i < window.localStorage.length; i++) {
-                const k = window.localStorage.key(i);
-                if (k && (k.startsWith('thk_practice_') || k.startsWith('thk_featured_') || k.startsWith('thk_vip_'))) {
-                    keysToRemove.push(k);
-                }
-            }
-            keysToRemove.forEach(k => window.localStorage.removeItem(k));
-        } catch (e) {}
-
-        const config = BANK_CONFIG[job];
-        if (config) {
-            $('bankInfo').innerHTML = '🔄 正在通知 CDN 刷新（约 2 秒）...';
-            __ptrIndicator.textContent = '🔄 通知 CDN 刷新...';
-            const purgeUrls = [
-                `https://purge.jsdelivr.net/gh/jrh168/thk-data@main/banks/${config.practice}`,
-                `https://purge.jsdelivr.net/gh/jrh168/thk-data@main/banks/${config.featured}`
-            ];
-            if (config.vip) purgeUrls.push(`https://purge.jsdelivr.net/gh/jrh168/thk-data@main/banks/${config.vip}`);
-            
-            await Promise.all(purgeUrls.map(url =>
-                fetch(url, { cache: 'no-store', mode: 'cors' }).catch(() => null)
-            ));
-            await new Promise(r => setTimeout(r, 1500));
-        }
-
-        $('bankInfo').innerHTML = '🔄 正在重新加载题库...';
-        __ptrIndicator.textContent = '🔄 重新加载中...';
-        
-        // 下拉刷新时顺便也刷新一下名单
-        await loadUsers();
-        await loadBanksForJob(job);
-
-        __ptrIndicator.textContent = '✅ 刷新成功';
-        setTimeout(() => { __ptrIndicator.style.height = '0px'; }, 800);
-        showToast('题库与名单已刷新到最新');
-    } catch (e) {
-        __ptrIndicator.textContent = '❌ 刷新失败';
-        setTimeout(() => { __ptrIndicator.style.height = '0px'; }, 1500);
-        showToast('刷新失败，请检查网络后重试');
-    } finally {
-        __ptrRefreshing = false;
-        setTimeout(() => {
-            __ptrIndicator.style.height = '0px';
-            __ptrIndicator.textContent = '下拉刷新题库';
-        }, 2000);
-    }
-}
-
-/* ============================================================
    启动
    ============================================================ */
 document.addEventListener('contextmenu', event => event.preventDefault());
 document.addEventListener('keydown', event => {
-    if (event.key === 'F12' || 
+    if (event.key === 'F12' ||
         (event.ctrlKey && event.shiftKey && ['I', 'J', 'C'].includes(event.key.toUpperCase())) ||
         (event.ctrlKey && event.key.toUpperCase() === 'U')) {
         event.preventDefault();
@@ -1422,21 +1411,27 @@ async function boot() {
     const logoImg = $('appLogo');
     if (logoImg && LOGO_URL) logoImg.src = LOGO_URL;
     getStorage(); bindEvents();
-    setupPullToRefresh();
 
-    // ★ 启动时加载 users.json 名单
     $('loginError').style.display = 'block';
     $('loginError').style.color = '#1890ff';
     $('loginError').textContent = '正在拉取用户名单，请稍候...';
-    
-    await loadUsers();
 
-    $('loginError').style.display = 'none';
+    const loadResult = await loadUsers(false);
+
     $('loginError').style.color = '#ff4d4f';
 
-    if (WHITELIST.length === 0) {
+    if (!loadResult.ok) {
         $('loginError').style.display = 'block';
-        $('loginError').textContent = '⚠️ 名单加载失败，请检查网络或 users.json 格式';
+        $('loginError').textContent = '⚠️ 名单加载失败，请检查网络后刷新页面重试';
+        console.error('名单加载失败', loadResult.error);
+    } else if (loadResult.stale) {
+        $('loginError').style.display = 'block';
+        $('loginError').style.color = '#ad6800';
+        $('loginError').textContent = '⚠️ 当前为离线缓存名单，可能不是最新，请刷新页面重试';
+    } else {
+        $('loginError').style.display = 'none';
+        console.log('当前名单人数：' + WHITELIST.length +
+            '（来源：' + (loadResult.fromCache ? '本地缓存' : loadResult.source) + '）');
     }
 
     const token = new URLSearchParams(location.search).get('token');
