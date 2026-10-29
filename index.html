@@ -399,7 +399,7 @@ async function loadUsers(forceRefresh) {
 }
 
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/jrh168/thk-data@main/banks/';
-const BANK_DATA_VERSION = "v20261029_18";
+const BANK_DATA_VERSION = "v20261029_19";
 
 const BANK_CONFIG = {
     '安全管理员': { practice: 'anquan1-dtk.json',  featured: 'anquan2-ckt.json', vip: 'vip-anquan.json' },
@@ -606,7 +606,7 @@ let examEndTime = 0;
    ============================================================ */
 const $ = id => document.getElementById(id);
 function findUser(phone) {
-   const p = String(phone || '').trim();
+    const p = String(phone || '').trim();
     if (!p) return undefined;
 
     const records = WHITELIST.filter(u => String(u.phone).trim() === p);
@@ -619,7 +619,8 @@ function findUser(phone) {
         jobs: [...new Set(records.map(r => r.job).filter(Boolean))],
         isVIP: records.some(r => r.isVIP === true),
         isAdmin: records.some(r => r.isAdmin === true),
-        expire: records.some(r => r.expire === '长期') ? '长期' : first.expire;
+        expire: records.some(r => r.expire === '长期') ? '长期' : first.expire
+    };
 }
 
 function calculateUserExpire(user) {
