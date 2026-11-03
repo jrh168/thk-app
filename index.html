@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>特好考 学习小帮手</title>
+<title>特好考 学习小助手</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; -webkit-tap-highlight-color: transparent; }
 body { background: #f0f2f5; padding: 15px; }
@@ -126,7 +126,7 @@ h3 { font-size: 16px; margin-bottom: 10px; }
 
 <div class="password-modal" id="passwordModal">
     <div class="password-content">
-        <h2 style="font-size: 18px; margin-bottom: 6px;">🔐 特好考 学习小帮手</h2>
+        <h2 style="font-size: 18px; margin-bottom: 6px;">🔐 特好考 学习小助手</h2>
         <p style="font-size: 12px; color: #999; margin-bottom: 15px;">请输入手机号及尾号（后6位）登录</p>
 
         <label class="login-label" for="phoneInput">手机号码</label>
@@ -146,13 +146,13 @@ h3 { font-size: 16px; margin-bottom: 10px; }
         <div class="logo-container">
             <div class="logo"><img id="appLogo" alt="特好考"></div>
             <div>
-                <h1 class="app-title">特好考 学习小帮手</h1>
+                <h1 class="app-title">特好考 学习小助手</h1>
                 <p class="app-subtitle">高效学习，轻松备考</p>
             </div>
         </div>
     </div>
 
-    <div class="tech-support">题库充值续费联系报名老师🔙 技术支持 thk811116@163.com</div>
+    <div class="tech-support">题库充值续费联系报名老师🔗 技术支持 thk811116@163.com</div>
 
     <div class="storage-warn" id="storageWarn">
         ⚠️ 当前环境不支持持久化存储，本次数据仅在当前会话有效（关闭页面后会清空）。建议使用现代浏览器打开。
@@ -194,9 +194,9 @@ h3 { font-size: 16px; margin-bottom: 10px; }
     </div>
 
     <div class="card">
-        <h3>⭐ 高频率题 & 🎯 模拟考试</h3>
+        <h3>⭐ 高频题 & 🎯 模拟考试</h3>
         <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-            <button class="exam-btn select-btn" id="startFeaturedBtn" style="flex: 1; margin-bottom: 0;">开始高频率题</button>
+            <button class="exam-btn select-btn" id="startFeaturedBtn" style="flex: 1; margin-bottom: 0;">开始高频题</button>
             <button class="exam-btn" id="startExamBtn" style="flex: 1; margin-bottom: 0; background: #722ed1;">开始模拟考试</button>
         </div>
         <div id="featuredInfo" class="exam-info hidden">
@@ -652,7 +652,7 @@ function calculateUserExpire(user) {
 }
 
 function validateUser(user) {
-    if (!user) return { ok: false, msg: '账号不存在，请联系管理员' };
+    if (!user) return { ok: false, msg: '账户不存在，请联系管理员' };
 
     const now = new Date();
     if (now.getFullYear() < 2024 || now.getTime() < BUILD_TIME - 30 * 86400000) {
@@ -663,7 +663,7 @@ function validateUser(user) {
     if (expInfo.isLongTerm) return { ok: true };
 
     if (now > expInfo.expireDate) {
-        return { ok: false, msg: `账号已到期（${expInfo.expireStr}），请联系管理员续期` };
+        return { ok: false, msg: `账户已到期（${expInfo.expireStr}），请联系管理员续期` };
     }
     return { ok: true };
 }
@@ -696,27 +696,40 @@ function loginSuccess(user) {
     $('userInfo').style.display = 'flex';
     $('userName').textContent = user.name;
 
-    if (user.isAdmin) {
+    const selector = $('jobSelector');
+    const userJobs = Array.isArray(user.jobs) ? user.jobs.filter(Boolean) : [];
+
+    // 管理员可选全部工种；普通用户若名单中有多个工种（如蒋燚），同样显示选择器
+    if (user.isAdmin || userJobs.length > 1) {
         $('userJob').style.display = 'none';
-        const selector = $('jobSelector');
         selector.style.display = 'inline-block';
+        selector.innerHTML = '';
 
-        if (selector.options.length === 0) {
-            Object.keys(BANK_CONFIG).forEach(job => {
-                const opt = document.createElement('option');
-                opt.value = job;
-                opt.textContent = job;
-                selector.appendChild(opt);
-            });
-        }
+        const jobList = user.isAdmin ? Object.keys(BANK_CONFIG) : userJobs;
+        jobList.forEach(job => {
+            const opt = document.createElement('option');
+            opt.value = job;
+            opt.textContent = job;
+            selector.appendChild(opt);
+        });
 
-        const savedJob = storageGet('thk_admin_job') || Object.keys(BANK_CONFIG)[0];
+        // 管理员沿用原缓存键；普通用户按手机号单独缓存，避免互相影响
+        const jobCacheKey = user.isAdmin ? 'thk_admin_job' : ('thk_user_job_' + user.phone);
+        let savedJob = storageGet(jobCacheKey);
+        if (!savedJob || jobList.indexOf(savedJob) === -1) savedJob = jobList[0];
         selector.value = savedJob;
 
         selector.onchange = (e) => {
             const newJob = e.target.value;
-            storageSet('thk_admin_job', newJob);
+            storageSet(jobCacheKey, newJob);
             showToast('已切换至：' + newJob);
+            if (!user.isAdmin) {
+                currentUser.job = newJob;
+                // 普通用户切换工种后重置练习进度，避免看到上一个工种的题目
+                quiz.practice = newQuiz();
+                quiz.featured = newQuiz();
+                quiz.vip = newQuiz();
+            }
             resetAllPanels();
             loadBanksForJob(newJob);
         };
@@ -725,7 +738,8 @@ function loginSuccess(user) {
     } else {
         $('userJob').style.display = 'inline-block';
         $('userJob').textContent = user.job;
-        $('jobSelector').style.display = 'none';
+        selector.style.display = 'none';
+        selector.onchange = null;
         loadBanksForJob(user.job);
     }
 
@@ -873,7 +887,7 @@ async function loadBanksForJob(job) {
         return;
     }
 
-    let infoHtml = `📚 <b>${escapeHtml(job)}</b> 题库已加载 ｜ 📖 题库练习：<b>${practiceCount}</b> 题 ｜ ⭐ 高频率题：<b>${featuredCount}</b> 题`;
+    let infoHtml = `📚 <b>${escapeHtml(job)}</b> 题库已加载 ｜ 📖 题库练习：<b>${practiceCount}</b> 题 ｜ ⭐ 高频题：<b>${featuredCount}</b> 题`;
     if (vipCount > 0) {
         infoHtml += ` ｜ 👑 VIP：<b>${vipCount}</b> 题`;
     }
@@ -961,7 +975,7 @@ window.pickOption = function (mode, letter) {
 };
 
 /* ============================================================
-   十二、题库练习 / 高频率题 / 错题练习
+   十二、题库练习 / 高频题 / 错题练习
    ============================================================ */
 function initQuiz(mode) {
     if (mode === 'wrong') {
@@ -1242,7 +1256,7 @@ function doSubmitExam(auto) {
         <div class="result-details">
             <div>✅ 正确题数：${correctCount} 题</div>
             <div>❌ 错误题数：${totalWrong} 题${unansweredCount ? `（含未作答 ${unansweredCount} 题）` : ''}</div>
-            <div>📝 总题数：${exam.list.length} 题</div>
+            <div>📖 总题数：${exam.list.length} 题</div>
             <div>⏱️ 用时：${formatDuration(usedSeconds)}</div>
             <div>🎯 及格线：${PASS_SCORE} 分</div>
             ${wrongList.length ? `<div style="color:#fa541c;margin-top:8px;">⚠️ 本次答错 ${wrongList.length} 题已加入「错题练习」（未作答不计入）</div>` : ''}
