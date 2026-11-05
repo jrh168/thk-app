@@ -260,19 +260,20 @@ h3 { font-size: 16px; margin-bottom: 10px; }
     </div>
 </div>
 
-<div class="version-info">v10.2.0 (修复版)</div>
+<div class="version-info">v10.2.1 (逻辑修正版)</div>
 
 <script>
 'use strict';
 
 /* ============================================================
-   全局配置区 (修改这里的参数来控制应用行为)
+   全局配置区
    ============================================================ */
 const LOGO_URL = 'https://i.postimg.cc/mkzHkLNd/THKlogo-3340-1-removebg-preview.png';
 const BUILD_TIME = new Date('2026-10-26T00:00:00').getTime();
 
-// ★★★ 题库缓存版本号：只要你在 GitHub 上更新了题库 JSON 文件，务必把这里改成不同的数字/字母！★★★
-const BANK_DATA_VERSION = "v20261105_1"; 
+// ★★★ 题库缓存版本号：只要你在 GitHub 上更新了题库 JSON 文件，务必把这里改成不同的数字！★★★
+// 本次已强制更新为 v20261105_2，用于拉取修正后的 JSON
+const BANK_DATA_VERSION = "v20261105_2"; 
 
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/jrh168/thk-data@main/banks/';
 const SESSION_DAYS  = 28;
@@ -293,7 +294,6 @@ const BANK_CONFIG = {
 
 const QR_TOKENS = { 'thk_zs_2026': '13800000001', 'thk_ls_2026': '13800000002' };
 
-// 内嵌名单（如需加人，在这里改）
 const EMBEDDED_USERS = [
   { "phone": "13883636880", "name": "蒋燚",       "job": "场（厂）内专用车", "expire": "58", "isVIP": true,  "isAdmin": false },
   { "phone": "18223287393", "name": "喻明生",     "job": "流动式起重机",     "expire": "58", "isVIP": true,  "isAdmin": false },
@@ -482,22 +482,32 @@ function normalizeOptions(src) {
     return out.map(stripLetterPrefix).map(s => s.trim()).filter(s => s !== '');
 }
 
+/* ★★★ 修复：兼容各种奇葩顺序的判断题 ★★★ */
 function toLetters(raw, options) {
     const s = String(raw == null ? '' : raw).trim();
     if (!s) return '';
+    
+    // 如果是两选项的判断题（如A对B错，或A错B对），动态匹配
     if (options && options.length === 2) {
         const a = options[0].trim(), b = options[1].trim();
-        const yes = /^(正确|对|是|√|T|True)$/i.test(a) && /^(错误|错|否|×|F|False)$/i.test(b);
-        const no  = /^(错误|错|否|×|F|False)$/i.test(a) && /^(正确|对|是|√|T|True)$/i.test(b);
-        if (yes || no) {
-            if (/^(对|正确|是|√|T|TRUE)$/i.test(s)) return 'A';
-            if (/^(错|错误|否|×|X|F|FALSE)$/i.test(s)) return 'B';
+        const isA_True = /^(正确|对|是|√|T|True)$/i.test(a) && /^(错误|错|否|×|F|False)$/i.test(b);
+        const isB_True = /^(错误|错|否|×|F|False)$/i.test(a) && /^(正确|对|是|√|T|True)$/i.test(b);
+        
+        if (isA_True || isB_True) {
+            const trueLetter = isA_True ? 'A' : 'B';
+            const falseLetter = isA_True ? 'B' : 'A';
+            if (/^(对|正确|是|√|T|TRUE)$/i.test(s)) return trueLetter;
+            if (/^(错|错误|否|×|X|F|FALSE)$/i.test(s)) return falseLetter;
         }
     }
+
+    // 普通字母或数字匹配
     const upper = s.toUpperCase();
     const letters = upper.match(/[A-Z]/g);
     if (letters && letters.length > 0) return letters.sort().join('');
     if (/^\d+$/.test(s)) return String.fromCharCode(65 + parseInt(s, 10) - 1);
+    
+    // 文本完全匹配兜底
     const norm = t => String(t).replace(/[\s。．.、,，;；:：]/g, '').toUpperCase();
     const target = norm(s);
     const matched = [];
@@ -579,7 +589,7 @@ function showToast(msg) {
 }
 
 /* ============================================================
-   错题本逻辑 (已修复 Bug，使用完整题目作为 Key)
+   错题本逻辑
    ============================================================ */
 function wrongKey() { return 'thk_wrong_' + (currentUser ? currentUser.phone : 'default'); }
 function getWrongStore() {
@@ -590,7 +600,6 @@ function setWrongStore(arr) { storageSet(wrongKey(), JSON.stringify(arr)); }
 function saveWrongQuestions(list) {
     if (!list || !list.length) return;
     const store = getWrongStore();
-    // 修复：直接使用完整的题目文本生成一个 Set 用于去重，不再截断 80 字符
     const existingQuestions = new Set(store.map(q => q.question));
     list.forEach(q => {
         if (!q.question || existingQuestions.has(q.question)) return;
@@ -602,7 +611,6 @@ function saveWrongQuestions(list) {
 
 function removeWrongQuestion(questionText) {
     const store = getWrongStore();
-    // 修复：完整比对题目
     const filtered = store.filter(q => q.question !== questionText);
     if (filtered.length !== store.length) setWrongStore(filtered);
 }
@@ -636,7 +644,6 @@ async function loadUsers() {
 }
 
 async function fetchBank(fileName, cacheKeyPrefix) {
-    // 注意：这里拼接了 BANK_DATA_VERSION。只要版本号变了，就会拉取新数据
     const finalCacheKey = cacheKeyPrefix + '_' + BANK_DATA_VERSION;
     try {
         const raw = storageGet(finalCacheKey);
