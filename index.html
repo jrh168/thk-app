@@ -5,12 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>特好考 学习小助手</title>
 <style>
+/* ================== 基础样式重置 ================== */
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; -webkit-tap-highlight-color: transparent; }
 body { background: #f0f2f5; padding: 15px; }
 .container { max-width: 100%; margin: 0 auto; }
 .card { background: #fff; border-radius: 12px; padding: 18px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
 h3 { font-size: 16px; margin-bottom: 10px; }
 
+/* ================== 头部与登录 ================== */
 .app-header { text-align: center; margin-bottom: 20px; padding: 15px; background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
 .logo-container { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px; }
 .logo { width: 60px; height: 60px; border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: transparent; flex-shrink: 0; }
@@ -28,6 +30,7 @@ h3 { font-size: 16px; margin-bottom: 10px; }
 .login-label { font-size: 13px; color: #666; text-align: left; display: block; margin-top: 12px; margin-bottom: 4px; }
 .login-error { color: #ff4d4f; margin-top: 10px; font-size: 12px; display: none; }
 
+/* ================== 用户信息 ================== */
 .user-info { background: #e6f7ff; border: 1px solid #91d5ff; border-radius: 6px; padding: 10px 12px; margin-bottom: 12px; font-size: 13px; color: #0050b3; display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex-wrap: wrap; }
 .user-info-left { display: flex; flex-direction: column; gap: 6px; line-height: 1.5; }
 .logout-btn { background: #ff4d4f; color: #fff; border: none; border-radius: 4px; padding: 6px 12px; cursor: pointer; font-size: 12px; flex-shrink: 0; align-self: center; }
@@ -35,6 +38,7 @@ h3 { font-size: 16px; margin-bottom: 10px; }
 .job-selector { padding: 4px 8px; border-radius: 4px; border: 1px solid #91d5ff; font-size: 13px; color: #0050b3; background: #fff; outline: none; cursor: pointer; margin-left: 4px; }
 .validity-inline { display: none; color: #389e0d; font-size: 12px; }
 
+/* ================== 按钮与状态 ================== */
 .success { background: #f6ffed; border: 1px solid #b7eb8f; color: #389e0d; padding: 8px; border-radius: 6px; font-size: 13px; }
 .storage-warn { background: #fff7e6; border: 1px solid #ffd591; color: #ad6800; padding: 8px 12px; border-radius: 6px; font-size: 12px; margin-bottom: 12px; display: none; }
 
@@ -56,6 +60,7 @@ h3 { font-size: 16px; margin-bottom: 10px; }
 .exam-btn-control.gold { background: #faad14; }
 .exam-btn-control:disabled { opacity: .45; cursor: not-allowed; }
 
+/* ================== 题目渲染 ================== */
 .question-item { border: 1px solid #e8e8e8; border-radius: 8px; padding: 12px; margin-bottom: 8px; position: relative; }
 .question-title { font-weight: bold; margin-bottom: 10px; color: #333; margin-top: 24px; font-size: 17px; line-height: 1.6; word-break: break-word; }
 .question-type { position: absolute; top: 8px; left: 12px; background: #1890ff; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 12px; font-weight: bold; }
@@ -71,6 +76,7 @@ h3 { font-size: 16px; margin-bottom: 10px; }
 .multi-select-hint { font-size: 13px; color: #fa541c; margin-bottom: 8px; font-style: italic; }
 .selected-options { margin-top: 8px; font-size: 14.5px; color: #1890ff; font-weight: bold; }
 
+/* ================== 考试面板 ================== */
 .exam-info { background: #f0f8ff; border: 1px solid #91d5ff; border-radius: 6px; padding: 12px; margin-bottom: 12px; text-align: center; }
 .exam-timer { font-size: 22px; font-weight: bold; color: #1890ff; margin: 8px 0; }
 .exam-progress { font-size: 14px; color: #666; margin-bottom: 8px; }
@@ -81,6 +87,7 @@ h3 { font-size: 16px; margin-bottom: 10px; }
 .result-fail { color: #ff4d4f; }
 .result-details { margin: 15px 0; text-align: left; font-size: 14px; line-height: 2; background: #fafafa; padding: 12px; border-radius: 6px; }
 
+/* ================== 成绩与统计 ================== */
 .score-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
 .score-table th, .score-table td { border: 1px solid #e8e8e8; padding: 6px 4px; text-align: center; }
 .score-table th { background: #f0f8ff; color: #1890ff; font-weight: 600; }
@@ -97,6 +104,7 @@ h3 { font-size: 16px; margin-bottom: 10px; }
 .score-empty { text-align: center; padding: 25px 15px; color: #999; font-size: 13px; line-height: 1.8; background: #fafafa; border-radius: 6px; }
 .score-empty .big { font-size: 32px; display: block; margin-bottom: 8px; }
 
+/* ================== 其他工具类 ================== */
 .hidden { display: none !important; }
 .badge { display: inline-block; background: #fa541c; color: #fff; border-radius: 10px; padding: 1px 8px; font-size: 11px; margin-left: 6px; font-weight: bold; }
 .empty-tip { text-align: center; padding: 30px 15px; color: #999; font-size: 14px; }
@@ -104,6 +112,7 @@ h3 { font-size: 16px; margin-bottom: 10px; }
 .wrong-hint { font-size: 13px; color: #fa541c; margin-bottom: 10px; text-align: left; padding: 8px 10px; background: #fff2f0; border-radius: 4px; }
 .version-info { position: fixed; bottom: 8px; right: 8px; font-size: 10px; color: #999; background: rgba(255,255,255,.9); padding: 4px 8px; border-radius: 12px; }
 
+/* ================== 自定义 Confirm ================== */
 .thk-confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 20px; }
 .thk-confirm-box { background: #fff; border-radius: 12px; padding: 22px; max-width: 320px; width: 100%; box-shadow: 0 4px 20px rgba(0,0,0,.25); animation: thkFadeIn .15s ease; }
 @keyframes thkFadeIn { from { transform: scale(.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -124,6 +133,7 @@ h3 { font-size: 16px; margin-bottom: 10px; }
 </head>
 <body>
 
+<!-- 登录模态框 -->
 <div class="password-modal" id="passwordModal">
     <div class="password-content">
         <h2 style="font-size: 18px; margin-bottom: 6px;">🔐 特好考 学习小助手</h2>
@@ -140,8 +150,8 @@ h3 { font-size: 16px; margin-bottom: 10px; }
     </div>
 </div>
 
+<!-- 主内容区 -->
 <div class="container" id="mainContent" style="display:none;">
-
     <div class="app-header">
         <div class="logo-container">
             <div class="logo"><img id="appLogo" alt="特好考"></div>
@@ -250,28 +260,40 @@ h3 { font-size: 16px; margin-bottom: 10px; }
     </div>
 </div>
 
-<div class="version-info">v10.1.0</div>
+<div class="version-info">v10.2.0 (修复版)</div>
 
 <script>
 'use strict';
 
+/* ============================================================
+   全局配置区 (修改这里的参数来控制应用行为)
+   ============================================================ */
 const LOGO_URL = 'https://i.postimg.cc/mkzHkLNd/THKlogo-3340-1-removebg-preview.png';
-
 const BUILD_TIME = new Date('2026-10-26T00:00:00').getTime();
 
-/* ============================================================
-   ★★★ 内嵌名单（方案A核心） ★★★
-   ------------------------------------------------------------
-   以后加人 / 删人 / 改工种，只改这个数组，保存刷新即生效：
-     { "phone": "11位手机号", "name": "姓名", "job": "工种",
-       "expire": "58", "isVIP": false, "isAdmin": false },
+// ★★★ 题库缓存版本号：只要你在 GitHub 上更新了题库 JSON 文件，务必把这里改成不同的数字/字母！★★★
+const BANK_DATA_VERSION = "v20261105_1"; 
 
-   工种必须是以下 5 个之一（否则题库加载不到）：
-     安全管理员 / 场（厂）内专用车 / 流动式起重机 / 起重机指挥 / 起重机司机
-   管理员工种写 "管理员" 即可（登录后可下拉切换全部工种）。
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/jrh168/thk-data@main/banks/';
+const SESSION_DAYS  = 28;
+const EXAM_MINUTES  = 60;
+const EXAM_MAX_Q    = 100;
+const PASS_SCORE    = 70;
+const CACHE_HOURS   = 24;
+const SCORE_MAX     = 20;
 
-   注意：同一手机号可以有多行（代表多个工种），系统会自动合并。
-   ============================================================ */
+// 各个工种的题库配置
+const BANK_CONFIG = {
+    '安全管理员': { practice: 'anquan1-dtk.json',  featured: 'anquan2-ckt.json', vip: 'vip-anquan.json' },
+    '场（厂）内专用车': { practice: 'chache1-dtk.json',  featured: 'chache2-ckt.json', vip: 'vip-chache.json' },
+    '流动式起重机': { practice: 'diaoche1-dtk.json', featured: 'diaoche2-ckt.json', vip: 'vip-diaoche.json' },
+    '起重机指挥': { practice: 'qizhong1-dtk.json', featured: 'qizhong2-ckt.json', vip: 'vip-qizhong.json' },
+    '起重机司机': { practice: 'xingche1-dtk.json', featured: 'xingche2-ckt.json', vip: 'vip-xingche.json' }
+};
+
+const QR_TOKENS = { 'thk_zs_2026': '13800000001', 'thk_ls_2026': '13800000002' };
+
+// 内嵌名单（如需加人，在这里改）
 const EMBEDDED_USERS = [
   { "phone": "13883636880", "name": "蒋燚",       "job": "场（厂）内专用车", "expire": "58", "isVIP": true,  "isAdmin": false },
   { "phone": "18223287393", "name": "喻明生",     "job": "流动式起重机",     "expire": "58", "isVIP": true,  "isAdmin": false },
@@ -314,11 +336,10 @@ const EMBEDDED_USERS = [
   { "phone": "13896714837", "name": "刘安川",     "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
   { "phone": "13072368572", "name": "谭文兵",     "job": "场（厂）内专用车", "expire": "38", "isVIP": false, "isAdmin": false },
   { "phone": "18883772529", "name": "廖树洪",     "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false }
-  // ↑★★ 以后加人在这里加一行，末尾用逗号，最后一条不加逗号 ★★↑
 ];
 
 /* ============================================================
-   一、Storage 封装（自动回退内存存储）
+   Storage 存储与兜底逻辑
    ============================================================ */
 const MemoryStorage = (() => {
     const store = Object.create(null);
@@ -346,34 +367,18 @@ function getStorage() {
     }
     return __storage;
 }
-
-function storageGet(key) {
-    try { return getStorage().getItem(key); } catch (e) { return null; }
-}
-function storageSet(key, val) {
-    try { getStorage().setItem(key, val); return true; } catch (e) { return false; }
-}
-function storageRemove(key) {
-    try { getStorage().removeItem(key); } catch (e) {}
-}
+function storageGet(key) { try { return getStorage().getItem(key); } catch (e) { return null; } }
+function storageSet(key, val) { try { getStorage().setItem(key, val); return true; } catch (e) { return false; } }
+function storageRemove(key) { try { getStorage().removeItem(key); } catch (e) {} }
 function isPersistentStorage() { getStorage(); return __storageIsPersistent; }
 
 /* ============================================================
-   二、基础配置（内嵌名单优先，远程兜底）
+   用户与登录相关
    ============================================================ */
 let WHITELIST = [];
-
-const USERS_DATA_VERSION = 'v20261026_01';
-const USERS_CACHE_HOURS  = 6;
-const USERS_SOURCES = [
-    'https://cdn.jsdelivr.net/gh/jrh168/thk-data@main/banks/users.json',
-    'https://fastly.jsdelivr.net/gh/jrh168/thk-data@main/banks/users.json',
-    'https://raw.githubusercontent.com/jrh168/thk-data/main/banks/users.json'
-];
-const USERS_PURGE_URLS = [
-    'https://purge.jsdelivr.net/gh/jrh168/thk-data@main/banks/users.json'
-];
-const USERS_CACHE_KEY = 'thk_users_cache_' + USERS_DATA_VERSION;
+let currentUser = null;
+let __mySessionId = null;
+const $ = id => document.getElementById(id);
 
 function normalizeUsers(list) {
     if (!Array.isArray(list)) return [];
@@ -388,113 +393,64 @@ function normalizeUsers(list) {
         .filter(u => /^1\d{10}$/.test(u.phone));
 }
 
-function readUsersCache(allowStale) {
-    try {
-        const raw = storageGet(USERS_CACHE_KEY);
-        if (!raw) return null;
-        const parsed = JSON.parse(raw);
-        if (!parsed || !Array.isArray(parsed.data) || !parsed.data.length) return null;
-        if (!allowStale && Date.now() - (parsed._time || 0) > USERS_CACHE_HOURS * 3600000) {
-            return null;
-        }
-        return parsed.data;
-    } catch (e) { return null; }
+function findUser(phone) {
+    const p = String(phone || '').trim();
+    if (!p) return undefined;
+    const records = WHITELIST.filter(u => String(u.phone).trim() === p);
+    if (!records.length) return undefined;
+    const first = records[0];
+    return {
+        ...first,
+        job: first.job,
+        jobs: [...new Set(records.map(r => r.job).filter(Boolean))],
+        isVIP: records.some(r => r.isVIP === true),
+        isAdmin: records.some(r => r.isAdmin === true),
+        expire: records.some(r => r.expire === '长期') ? '长期' : first.expire
+    };
 }
 
-function writeUsersCache(list) {
-    try {
-        storageSet(USERS_CACHE_KEY, JSON.stringify({ _time: Date.now(), data: list }));
-    } catch (e) {}
+function calculateUserExpire(user) {
+    if (user.expire === '长期') return { isLongTerm: true, expireDate: null, expireStr: '长期' };
+    const days = parseInt(user.expire, 10) || 58;
+    const firstLoginKey = 'thk_first_login_' + user.phone;
+    let firstLoginTime = storageGet(firstLoginKey);
+    if (!firstLoginTime) {
+        firstLoginTime = BUILD_TIME;
+        storageSet(firstLoginKey, firstLoginTime);
+    } else {
+        firstLoginTime = parseInt(firstLoginTime, 10);
+    }
+    const expireDate = new Date(firstLoginTime + days * 86400000);
+    const y = expireDate.getFullYear();
+    const m = String(expireDate.getMonth() + 1).padStart(2, '0');
+    const d = String(expireDate.getDate()).padStart(2, '0');
+    return { isLongTerm: false, expireDate: expireDate, expireStr: `${y}-${m}-${d}` };
 }
 
-async function fetchUsersFromSource(baseUrl) {
-    const url = baseUrl + (baseUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
-    const res = await fetch(url, { cache: 'no-cache' });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    let json;
-    try {
-        json = await res.json();
-    } catch (parseErr) {
-        throw new Error('JSON 解析失败：' + parseErr.message);
+function validateUser(user) {
+    if (!user) return { ok: false, msg: '账户不存在，请联系管理员' };
+    const now = new Date();
+    if (now.getFullYear() < 2024 || now.getTime() < BUILD_TIME - 30 * 86400000) {
+        return { ok: false, msg: '系统时间异常，请校准您的设备时间后再试' };
     }
-    const list = normalizeUsers(json);
-    if (!list.length) throw new Error('名单为空或字段格式不正确');
-    return list;
+    const expInfo = calculateUserExpire(user);
+    if (expInfo.isLongTerm) return { ok: true };
+    if (now > expInfo.expireDate) return { ok: false, msg: `账户已到期（${expInfo.expireStr}），请联系管理员续期` };
+    return { ok: true };
 }
-
-async function loadUsers(forceRefresh) {
-    /* ★★★ 方案A核心：内嵌名单优先，命中则跳过缓存与网络，改完保存刷新即生效 ★★★ */
-    if (Array.isArray(EMBEDDED_USERS) && EMBEDDED_USERS.length > 0) {
-        WHITELIST = normalizeUsers(EMBEDDED_USERS);
-        console.log('✅ 名单来自内嵌，共 ' + WHITELIST.length + ' 条记录');
-        return { ok: true, fromEmbedded: true, count: WHITELIST.length };
-    }
-    /* 以下为兜底：内嵌为空时仍走原来的远程逻辑，不影响老流程 */
-
-    if (!forceRefresh) {
-        const cached = readUsersCache(false);
-        if (cached) {
-            WHITELIST = cached;
-            console.log('名单命中本地缓存，共 ' + WHITELIST.length + ' 人');
-            return { ok: true, fromCache: true, count: WHITELIST.length };
-        }
-    }
-    let lastErr = null;
-    for (const url of USERS_SOURCES) {
-        try {
-            const list = await fetchUsersFromSource(url);
-            WHITELIST = list;
-            writeUsersCache(list);
-            let host = '';
-            try { host = new URL(url).host; } catch (e) {}
-            console.log('名单加载成功（' + host + '），共 ' + WHITELIST.length + ' 人');
-            return { ok: true, fromCache: false, count: WHITELIST.length, source: url };
-        } catch (e) {
-            lastErr = e;
-            console.warn('名单源失败：' + url + ' -> ' + e.message);
-        }
-    }
-    const stale = readUsersCache(true);
-    if (stale) {
-        WHITELIST = stale;
-        console.warn('所有源均失败，使用过期缓存，共 ' + WHITELIST.length + ' 人');
-        return { ok: true, fromCache: true, stale: true, count: WHITELIST.length };
-    }
-    console.error('名单加载失败：所有源均不可用', lastErr);
-    return { ok: false, error: lastErr };
-}
-
-const CDN_BASE = 'https://cdn.jsdelivr.net/gh/jrh168/thk-data@main/banks/';
-const BANK_DATA_VERSION = "v20261029_168";
-
-const BANK_CONFIG = {
-    '安全管理员': { practice: 'anquan1-dtk.json',  featured: 'anquan2-ckt.json', vip: 'vip-anquan.json' },
-    '场（厂）内专用车': { practice: 'chache1-dtk.json',  featured: 'chache2-ckt.json', vip: 'vip-chache.json' },
-    '流动式起重机': { practice: 'diaoche1-dtk.json', featured: 'diaoche2-ckt.json', vip: 'vip-diaoche.json' },
-    '起重机指挥': { practice: 'qizhong1-dtk.json', featured: 'qizhong2-ckt.json', vip: 'vip-qizhong.json' },
-    '起重机司机': { practice: 'xingche1-dtk.json', featured: 'xingche2-ckt.json', vip: 'vip-xingche.json' }
-};
-
-const QR_TOKENS = { 'thk_zs_2026': '13800000001', 'thk_ls_2026': '13800000002' };
-
-const SESSION_DAYS  = 28;
-const EXAM_MINUTES  = 60;
-const EXAM_MAX_Q    = 100;
-const PASS_SCORE    = 70;
-const CACHE_HOURS   = 24;
-const SCORE_MAX     = 20;
 
 /* ============================================================
-   三、单端登录控制变量
-   ============================================================ */
-let __mySessionId = null;
-let currentQuizMode = 'practice';
-
-/* ============================================================
-   四、小工具
+   题目解析与核心逻辑
    ============================================================ */
 let __uidSeed = 0;
 const nextUid = () => 'q' + (++__uidSeed);
+
+const banks = { practice: [], featured: [], vip: [] };
+function newQuiz() { return { list: [], index: 0, ans: {}, sub: {}, rev: {} }; }
+const quiz = { practice: newQuiz(), featured: newQuiz(), wrong: newQuiz(), vip: newQuiz() };
+const exam = { list: [], index: 0, ans: {}, rev: {}, timeLeft: EXAM_MINUTES * 60, timer: null, active: false };
+let examEndTime = 0;
+let currentQuizMode = 'practice';
 
 function shuffle(arr) {
     const a = arr.slice();
@@ -504,74 +460,16 @@ function shuffle(arr) {
     }
     return a;
 }
-
 function escapeHtml(s) {
-    return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
-        { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
-    ));
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
-
 function daysBetween(a, b) { return Math.ceil((b - a) / 86400000); }
-
 function formatDuration(seconds) {
     if (seconds == null || seconds < 0) return '—';
-    const m = Math.floor(seconds / 60);
-    const s = Math.floor(seconds % 60);
-    return `${m}分${String(s).padStart(2, '0')}秒`;
+    return `${Math.floor(seconds / 60)}分${String(Math.floor(seconds % 60)).padStart(2, '0')}秒`;
 }
 
-/* ============================================================
-   五、弹窗与提示
-   ============================================================ */
-function showConfirm(msg, onOk, onCancel) {
-    const existing = document.querySelector('.thk-confirm-overlay');
-    if (existing) existing.remove();
-
-    const overlay = document.createElement('div');
-    overlay.className = 'thk-confirm-overlay';
-    const box = document.createElement('div');
-    box.className = 'thk-confirm-box';
-    const msgDiv = document.createElement('div');
-    msgDiv.className = 'thk-confirm-msg';
-    msgDiv.textContent = msg;
-    const btns = document.createElement('div');
-    btns.className = 'thk-confirm-btns';
-    const cancelBtn = document.createElement('button');
-    cancelBtn.type = 'button';
-    cancelBtn.className = 'thk-confirm-cancel';
-    cancelBtn.textContent = '取消';
-    const okBtn = document.createElement('button');
-    okBtn.type = 'button';
-    okBtn.className = 'thk-confirm-ok';
-    okBtn.textContent = '确定';
-    btns.appendChild(cancelBtn);
-    btns.appendChild(okBtn);
-    box.appendChild(msgDiv);
-    box.appendChild(btns);
-    overlay.appendChild(box);
-    document.body.appendChild(overlay);
-
-    const close = () => { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); };
-    cancelBtn.addEventListener('click', () => { close(); if (onCancel) onCancel(); });
-    okBtn.addEventListener('click', () => { close(); if (onOk) onOk(); });
-    overlay.addEventListener('click', (e) => { if (e.target === overlay) { close(); if (onCancel) onCancel(); } });
-}
-
-function showToast(msg) {
-    const t = document.createElement('div');
-    t.textContent = msg;
-    t.style.cssText = 'position:fixed;left:50%;bottom:60px;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:10px 18px;border-radius:20px;font-size:13px;z-index:10000;pointer-events:none;opacity:0;transition:opacity .2s;max-width:80%;text-align:center;';
-    document.body.appendChild(t);
-    requestAnimationFrame(() => { t.style.opacity = '1'; });
-    setTimeout(() => { t.style.opacity = '0'; setTimeout(() => { if (t.parentNode) t.parentNode.removeChild(t); }, 250); }, 1800);
-}
-
-/* ============================================================
-   六、题目解析
-   ============================================================ */
-function stripLetterPrefix(text) {
-    return String(text).trim().replace(/^[A-Za-z]\s*[.、．:：)）]\s*/, '');
-}
+function stripLetterPrefix(text) { return String(text).trim().replace(/^[A-Za-z]\s*[.、．:：)）]\s*/, ''); }
 function extractText(v) {
     if (v == null) return '';
     if (typeof v === 'object') return String(v.text ?? v.content ?? v.value ?? v.label ?? '');
@@ -579,15 +477,14 @@ function extractText(v) {
 }
 function normalizeOptions(src) {
     const out = [];
-    if (Array.isArray(src)) { src.forEach(v => out.push(extractText(v))); }
-    else if (src && typeof src === 'object') { Object.keys(src).sort().forEach(k => out.push(extractText(src[k]))); }
+    if (Array.isArray(src)) src.forEach(v => out.push(extractText(v)));
+    else if (src && typeof src === 'object') Object.keys(src).sort().forEach(k => out.push(extractText(src[k])));
     return out.map(stripLetterPrefix).map(s => s.trim()).filter(s => s !== '');
 }
 
 function toLetters(raw, options) {
     const s = String(raw == null ? '' : raw).trim();
     if (!s) return '';
-
     if (options && options.length === 2) {
         const a = options[0].trim(), b = options[1].trim();
         const yes = /^(正确|对|是|√|T|True)$/i.test(a) && /^(错误|错|否|×|F|False)$/i.test(b);
@@ -597,16 +494,10 @@ function toLetters(raw, options) {
             if (/^(错|错误|否|×|X|F|FALSE)$/i.test(s)) return 'B';
         }
     }
-
     const upper = s.toUpperCase();
     const letters = upper.match(/[A-Z]/g);
     if (letters && letters.length > 0) return letters.sort().join('');
-
-    if (/^\d+$/.test(s)) {
-        const num = parseInt(s, 10);
-        return String.fromCharCode(65 + num - 1);
-    }
-
+    if (/^\d+$/.test(s)) return String.fromCharCode(65 + parseInt(s, 10) - 1);
     const norm = t => String(t).replace(/[\s。．.、,，;；:：]/g, '').toUpperCase();
     const target = norm(s);
     const matched = [];
@@ -623,278 +514,130 @@ function convertQuestionFormat(raw) {
         if (!question) return null;
         const options = normalizeOptions(item.options ?? item.选项 ?? item.opts ?? []);
         if (!options.length) return null;
-
-        let correctAnswer = String(item.answer ?? item.答案 ?? item.正确答案 ?? item.correct ?? '').trim();
-        if (!correctAnswer) correctAnswer = 'A';
-
+        let correctAnswer = String(item.answer ?? item.答案 ?? item.正确答案 ?? item.correct ?? 'A').trim();
         let type = String(item.type ?? item.题型 ?? '').trim();
         if (type.includes('多选')) type = '多选题';
         else if (type.includes('判断')) type = '判断题';
         else if (type.includes('单选')) type = '单选题';
         else type = '';
-
         return { uid: nextUid(), srcIndex: index, question, options, correctAnswer, type };
     }).filter(Boolean);
 }
 
-/* ============================================================
-   七、题型判定
-   ============================================================ */
 const TYPE_TEXT = { single: '单选题', multiple: '多选题', judgment: '判断题' };
 function getQType(q) {
     const t = String(q.type || ''), question = String(q.question || '');
     if (question.includes('多选') || t.includes('多选')) return 'multiple';
     if (question.includes('判断') || t.includes('判断')) return 'judgment';
-
     const opts = (q.options || []).filter(o => o !== '');
     if (opts.length === 2) {
         const a = opts[0].trim(), b = opts[1].trim();
         if (/^(正确|对|是|√|T|True)$/i.test(a) && /^(错误|错|否|×|F|False)$/i.test(b)) return 'judgment';
         if (/^(错误|错|否|×|F|False)$/i.test(a) && /^(正确|对|是|√|T|True)$/i.test(b)) return 'judgment';
     }
-    const letters = toLetters(q.correctAnswer, q.options);
-    if (letters.length > 1) return 'multiple';
+    if (toLetters(q.correctAnswer, q.options).length > 1) return 'multiple';
     return 'single';
 }
 
 /* ============================================================
-   八、全局状态
+   弹窗与提示
    ============================================================ */
-const banks = { practice: [], featured: [], vip: [] };
-let currentUser = null;
-function newQuiz() { return { list: [], index: 0, ans: {}, sub: {}, rev: {} }; }
-const quiz = { practice: newQuiz(), featured: newQuiz(), wrong: newQuiz(), vip: newQuiz() };
-const exam = { list: [], index: 0, ans: {}, rev: {}, timeLeft: EXAM_MINUTES * 60, timer: null, active: false };
-let examEndTime = 0;
-
-/* ============================================================
-   九、登录 / 会话
-   ============================================================ */
-const $ = id => document.getElementById(id);
-function findUser(phone) {
-    const p = String(phone || '').trim();
-    if (!p) return undefined;
-
-    const records = WHITELIST.filter(u => String(u.phone).trim() === p);
-    if (!records.length) return undefined;
-
-    const first = records[0];
-    return {
-        ...first,
-        job: first.job,
-        jobs: [...new Set(records.map(r => r.job).filter(Boolean))],
-        isVIP: records.some(r => r.isVIP === true),
-        isAdmin: records.some(r => r.isAdmin === true),
-        expire: records.some(r => r.expire === '长期') ? '长期' : first.expire
-    };
+function showConfirm(msg, onOk, onCancel) {
+    const existing = document.querySelector('.thk-confirm-overlay');
+    if (existing) existing.remove();
+    const overlay = document.createElement('div');
+    overlay.className = 'thk-confirm-overlay';
+    const box = document.createElement('div');
+    box.className = 'thk-confirm-box';
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'thk-confirm-msg';
+    msgDiv.textContent = msg;
+    const btns = document.createElement('div');
+    btns.className = 'thk-confirm-btns';
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'thk-confirm-cancel';
+    cancelBtn.textContent = '取消';
+    const okBtn = document.createElement('button');
+    okBtn.className = 'thk-confirm-ok';
+    okBtn.textContent = '确定';
+    btns.appendChild(cancelBtn); btns.appendChild(okBtn);
+    box.appendChild(msgDiv); box.appendChild(btns); overlay.appendChild(box);
+    document.body.appendChild(overlay);
+    const close = () => { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); };
+    cancelBtn.addEventListener('click', () => { close(); if (onCancel) onCancel(); });
+    okBtn.addEventListener('click', () => { close(); if (onOk) onOk(); });
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) { close(); if (onCancel) onCancel(); } });
 }
 
-function calculateUserExpire(user) {
-    if (user.expire === '长期') {
-        return { isLongTerm: true, expireDate: null, expireStr: '长期' };
-    }
-
-    const days = parseInt(user.expire, 10) || 58;
-    const firstLoginKey = 'thk_first_login_' + user.phone;
-    let firstLoginTime = storageGet(firstLoginKey);
-
-    if (!firstLoginTime) {
-        firstLoginTime = BUILD_TIME;
-        storageSet(firstLoginKey, firstLoginTime);
-    } else {
-        firstLoginTime = parseInt(firstLoginTime, 10);
-    }
-
-    const expireDate = new Date(firstLoginTime + days * 86400000);
-    const y = expireDate.getFullYear();
-    const m = String(expireDate.getMonth() + 1).padStart(2, '0');
-    const d = String(expireDate.getDate()).padStart(2, '0');
-
-    return {
-        isLongTerm: false,
-        expireDate: expireDate,
-        expireStr: `${y}-${m}-${d}`
-    };
-}
-
-function validateUser(user) {
-    if (!user) return { ok: false, msg: '账户不存在，请联系管理员' };
-
-    const now = new Date();
-    if (now.getFullYear() < 2024 || now.getTime() < BUILD_TIME - 30 * 86400000) {
-        return { ok: false, msg: '系统时间异常，请校准您的电脑时间后再试' };
-    }
-
-    const expInfo = calculateUserExpire(user);
-    if (expInfo.isLongTerm) return { ok: true };
-
-    if (now > expInfo.expireDate) {
-        return { ok: false, msg: `账户已到期（${expInfo.expireStr}），请联系管理员续期` };
-    }
-    return { ok: true };
-}
-
-function showLoginError(msg) {
-    const el = $('loginError'); el.textContent = msg; el.style.display = 'block';
-}
-
-function checkLogin() {
-    const phone = $('phoneInput').value.trim(), code = $('codeInput').value.trim();
-    $('loginError').style.display = 'none';
-    if (!/^1[3-9]\d{9}$/.test(phone)) return showLoginError('请输入正确的11位手机号');
-    if (code !== phone.slice(-6)) return showLoginError('密码错误（应为手机号后6位）');
-    const user = findUser(phone);
-    const v = validateUser(user);
-    if (!v.ok) return showLoginError(v.msg);
-
-    loginSuccess(user);
-}
-
-function loginSuccess(user) {
-    currentUser = user;
-
-    __mySessionId = Date.now() + '_' + Math.random();
-    storageSet('thk_active_' + user.phone, __mySessionId);
-    storageSet('thk_session', JSON.stringify({ phone: user.phone, sessionEnd: Date.now() + SESSION_DAYS * 86400000 }));
-
-    $('passwordModal').style.display = 'none';
-    $('mainContent').style.display = 'block';
-    $('userInfo').style.display = 'flex';
-    $('userName').textContent = user.name;
-
-    const selector = $('jobSelector');
-    const userJobs = Array.isArray(user.jobs) ? user.jobs.filter(Boolean) : [];
-
-    if (user.isAdmin || userJobs.length > 1) {
-        $('userJob').style.display = 'none';
-        selector.style.display = 'inline-block';
-        selector.innerHTML = '';
-
-        const jobList = user.isAdmin ? Object.keys(BANK_CONFIG) : userJobs;
-        jobList.forEach(job => {
-            const opt = document.createElement('option');
-            opt.value = job;
-            opt.textContent = job;
-            selector.appendChild(opt);
-        });
-
-        const jobCacheKey = user.isAdmin ? 'thk_admin_job' : ('thk_user_job_' + user.phone);
-        let savedJob = storageGet(jobCacheKey);
-        if (!savedJob || jobList.indexOf(savedJob) === -1) savedJob = jobList[0];
-        selector.value = savedJob;
-
-        selector.onchange = (e) => {
-            const newJob = e.target.value;
-            storageSet(jobCacheKey, newJob);
-            showToast('已切换至：' + newJob);
-            if (!user.isAdmin) {
-                currentUser.job = newJob;
-                quiz.practice = newQuiz();
-                quiz.featured = newQuiz();
-                quiz.vip = newQuiz();
-            }
-            resetAllPanels();
-            loadBanksForJob(newJob);
-        };
-
-        loadBanksForJob(savedJob);
-    } else {
-        $('userJob').style.display = 'inline-block';
-        $('userJob').textContent = user.job;
-        selector.style.display = 'none';
-        selector.onchange = null;
-        loadBanksForJob(user.job);
-    }
-
-    const expInfo = calculateUserExpire(user);
-    const validityInfoEl = $('validityInfo');
-    validityInfoEl.style.display = 'inline-block';
-
-    if (expInfo.isLongTerm) {
-        $('validityDate').textContent = '长期有效';
-        $('remainingDays').textContent = '长期';
-    } else {
-        const remain = Math.max(0, daysBetween(new Date(), expInfo.expireDate));
-        $('validityDate').textContent = expInfo.expireStr;
-        $('remainingDays').textContent = remain;
-    }
-
-    if (!isPersistentStorage()) $('storageWarn').style.display = 'block';
-    refreshWrongBadge();
-    renderScoreHistory();
-}
-
-function logout() { showConfirm('确定退出登录吗？', doLogout); }
-function doLogout() {
-    try {
-        const keysToRemove = [];
-        for (let i = 0; i < window.localStorage.length; i++) {
-            const k = window.localStorage.key(i);
-            if (k && (k.startsWith('thk_practice_') || k.startsWith('thk_featured_') || k.startsWith('thk_vip_'))) {
-                keysToRemove.push(k);
-            }
-        }
-        keysToRemove.forEach(k => window.localStorage.removeItem(k));
-    } catch (e) {}
-
-    storageRemove('thk_session');
-    if (currentUser) {
-        storageRemove('thk_active_' + currentUser.phone);
-    }
-    __mySessionId = null;
-
-    if (exam.timer) { clearInterval(exam.timer); exam.timer = null; }
-    exam.active = false;
-    exam.list = []; exam.ans = {}; exam.rev = {}; exam.index = 0;
-    exam.timeLeft = EXAM_MINUTES * 60; examEndTime = 0;
-
-    currentUser = null;
-    banks.practice = []; banks.featured = []; banks.vip = [];
-    quiz.practice = newQuiz(); quiz.featured = newQuiz(); quiz.wrong = newQuiz(); quiz.vip = newQuiz();
-
-    $('examResult').innerHTML = '';
-    $('examResult').classList.add('hidden');
-
-    $('passwordModal').style.display = 'flex';
-    $('mainContent').style.display = 'none';
-    $('userInfo').style.display = 'none';
-    $('validityInfo').style.display = 'none';
-    $('storageWarn').style.display = 'none';
-    $('phoneInput').value = ''; $('codeInput').value = '';
-    $('loginError').style.display = 'none';
-    try { $('phoneInput').focus(); } catch (e) {}
-    resetAllPanels();
-}
-
-function resetAllPanels() {
-    if (exam.timer) { clearInterval(exam.timer); exam.timer = null; }
-    exam.active = false;
-    exam.list = []; exam.ans = {}; exam.rev = {}; exam.index = 0;
-    exam.timeLeft = EXAM_MINUTES * 60; examEndTime = 0;
-
-    $('bankInfo').innerHTML = '📚 正在加载题库...';
-    $('practiceInfo').classList.add('hidden'); $('featuredInfo').classList.add('hidden');
-    $('examInfo').classList.add('hidden');
-
-    $('examResult').classList.add('hidden');
-    $('examResult').innerHTML = '';
-
-    $('wrongInfo').classList.add('hidden'); $('wrongEmpty').style.display = 'none';
-    $('wrongCountBadge').style.display = 'none';
-    $('practiceContainer').innerHTML = ''; $('featuredContainer').innerHTML = '';
-    $('examContainer').innerHTML = ''; $('wrongContainer').innerHTML = '';
-    $('scoreHistoryContent').innerHTML = '';
-    $('examTimer').textContent = `${String(EXAM_MINUTES).padStart(2, '0')}:00`;
-    $('examTimer').style.color = '#1890ff';
-
-    updateBtnActive(null);
+function showToast(msg) {
+    const t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = 'position:fixed;left:50%;bottom:60px;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:10px 18px;border-radius:20px;font-size:13px;z-index:10000;pointer-events:none;opacity:0;transition:opacity .2s;max-width:80%;text-align:center;';
+    document.body.appendChild(t);
+    requestAnimationFrame(() => { t.style.opacity = '1'; });
+    setTimeout(() => { t.style.opacity = '0'; setTimeout(() => { if (t.parentNode) t.parentNode.removeChild(t); }, 250); }, 1800);
 }
 
 /* ============================================================
-   十、题库加载
+   错题本逻辑 (已修复 Bug，使用完整题目作为 Key)
    ============================================================ */
-async function fetchBank(fileName, cacheKey) {
-    const finalCacheKey = cacheKey + '_' + BANK_DATA_VERSION;
+function wrongKey() { return 'thk_wrong_' + (currentUser ? currentUser.phone : 'default'); }
+function getWrongStore() {
+    try { const raw = storageGet(wrongKey()); if (!raw) return []; const arr = JSON.parse(raw); return Array.isArray(arr) ? arr : []; } catch (e) { return []; }
+}
+function setWrongStore(arr) { storageSet(wrongKey(), JSON.stringify(arr)); }
+
+function saveWrongQuestions(list) {
+    if (!list || !list.length) return;
+    const store = getWrongStore();
+    // 修复：直接使用完整的题目文本生成一个 Set 用于去重，不再截断 80 字符
+    const existingQuestions = new Set(store.map(q => q.question));
+    list.forEach(q => {
+        if (!q.question || existingQuestions.has(q.question)) return;
+        store.push({ question: q.question, options: q.options, correctAnswer: q.correctAnswer, type: q.type || '', addTime: Date.now() });
+        existingQuestions.add(q.question);
+    });
+    setWrongStore(store);
+}
+
+function removeWrongQuestion(questionText) {
+    const store = getWrongStore();
+    // 修复：完整比对题目
+    const filtered = store.filter(q => q.question !== questionText);
+    if (filtered.length !== store.length) setWrongStore(filtered);
+}
+
+function refreshWrongBadge() {
+    const count = getWrongStore().length; const badge = $('wrongCountBadge');
+    if (count > 0) { badge.textContent = count; badge.style.display = 'inline-block'; } else { badge.style.display = 'none'; }
+}
+function updateWrongHint() {
+    const total = getWrongStore().length;
+    const hint = $('wrongHint');
+    if (hint) hint.textContent = `📌 错题本共 ${total} 题，答题正确将自动从错题本移除`;
+}
+function clearWrongBook() { showConfirm('确定清空错题本吗？此操作不可恢复。', doClearWrongBook); }
+function doClearWrongBook() {
+    setWrongStore([]); refreshWrongBadge();
+    quiz.wrong.list = []; $('wrongInfo').classList.add('hidden'); $('wrongEmpty').style.display = 'block';
+    showToast('错题本已清空'); updateBtnActive(null);
+}
+
+/* ============================================================
+   数据加载核心
+   ============================================================ */
+async function loadUsers() {
+    if (Array.isArray(EMBEDDED_USERS) && EMBEDDED_USERS.length > 0) {
+        WHITELIST = normalizeUsers(EMBEDDED_USERS);
+        console.log('✅ 名单来自内嵌，共 ' + WHITELIST.length + ' 条记录');
+        return { ok: true };
+    }
+    return { ok: false, error: '未配置内嵌名单' };
+}
+
+async function fetchBank(fileName, cacheKeyPrefix) {
+    // 注意：这里拼接了 BANK_DATA_VERSION。只要版本号变了，就会拉取新数据
+    const finalCacheKey = cacheKeyPrefix + '_' + BANK_DATA_VERSION;
     try {
         const raw = storageGet(finalCacheKey);
         if (raw) {
@@ -928,37 +671,33 @@ async function loadBanksForJob(job) {
     let practiceCount = 0, featuredCount = 0, vipCount = 0;
     try {
         const data = await fetchBank(config.practice, 'thk_practice_' + job);
-        const rawList = Array.isArray(data) ? data : (data.questions || data.data || []);
-        banks.practice = convertQuestionFormat(rawList); practiceCount = banks.practice.length;
+        banks.practice = convertQuestionFormat(Array.isArray(data) ? data : (data.questions || data.data || []));
+        practiceCount = banks.practice.length;
     } catch (e) { banks.practice = []; }
     try {
         const data = await fetchBank(config.featured, 'thk_featured_' + job);
-        const rawList = Array.isArray(data) ? data : (data.questions || data.data || []);
-        banks.featured = convertQuestionFormat(rawList); featuredCount = banks.featured.length;
+        banks.featured = convertQuestionFormat(Array.isArray(data) ? data : (data.questions || data.data || []));
+        featuredCount = banks.featured.length;
     } catch (e) { banks.featured = []; }
     try {
         if (config.vip) {
             const data = await fetchBank(config.vip, 'thk_vip_' + job);
-            const rawList = Array.isArray(data) ? data : (data.questions || data.data || []);
-            banks.vip = convertQuestionFormat(rawList); vipCount = banks.vip.length;
-        } else {
-            banks.vip = [];
-        }
+            banks.vip = convertQuestionFormat(Array.isArray(data) ? data : (data.questions || data.data || []));
+            vipCount = banks.vip.length;
+        } else banks.vip = [];
     } catch (e) { banks.vip = []; }
+    
     if (practiceCount === 0 && featuredCount === 0 && vipCount === 0) {
-        $('bankInfo').innerHTML = '❌ 题库加载失败或内容为空，请检查网络后重试';
+        $('bankInfo').innerHTML = '❌ 题库加载失败或内容为空，请检查网络或联系管理员';
         return;
     }
-
-    let infoHtml = `📚 <b>${escapeHtml(job)}</b> 题库已加载 ｜ 📖 题库练习：<b>${practiceCount}</b> 题 ｜ ⭐ 高频题：<b>${featuredCount}</b> 题`;
-    if (vipCount > 0) {
-        infoHtml += ` ｜ 👑 VIP：<b>${vipCount}</b> 题`;
-    }
+    let infoHtml = `📚 <b>${escapeHtml(job)}</b> 题库已加载 ｜ 📖 练习：<b>${practiceCount}</b> 题 ｜ ⭐ 高频：<b>${featuredCount}</b> 题`;
+    if (vipCount > 0) infoHtml += ` ｜ 👑 VIP：<b>${vipCount}</b> 题`;
     $('bankInfo').innerHTML = infoHtml;
 }
 
 /* ============================================================
-   十一、通用答题渲染
+   界面渲染与交互逻辑
    ============================================================ */
 const QUIZ_UI = {
     practice: { container: 'practiceContainer', progress: 'practiceProgress', answerBtn: 'practiceAnswerBtn', prevBtn: 'practicePrevBtn', nextBtn: 'practiceNextBtn', restartBtn: 'practiceRestartBtn' },
@@ -988,9 +727,7 @@ function buildQuestionHtml(q, index, total, opts) {
         if (showResult) {
             if (isCorrect) cls += ' correct';
             else if (isPicked) cls += ' wrong';
-        } else if (isPicked) {
-            cls += ' selected';
-        }
+        } else if (isPicked) cls += ' selected';
         html += `<div class="${cls}" data-letter="${letter}">${letter}. ${escapeHtml(opt)}</div>`;
     });
     html += '</div>';
@@ -1010,8 +747,7 @@ function buildQuestionHtml(q, index, total, opts) {
 }
 
 function togglePick(store, q, letter) {
-    const type = getQType(q);
-    if (type === 'multiple') {
+    if (getQType(q) === 'multiple') {
         let cur = store[q.uid] || '';
         cur = cur.includes(letter) ? cur.replace(letter, '') : cur + letter;
         store[q.uid] = cur.split('').sort().join('');
@@ -1031,15 +767,11 @@ window.pickOption = function (mode, letter) {
     }
     const s = quiz[mode];
     const q = s.list[s.index];
-    if (!q) return;
-    if (s.sub[q.uid]) return;
+    if (!q || s.sub[q.uid]) return;
     togglePick(s.ans, q, letter);
     renderQuiz(mode);
 };
 
-/* ============================================================
-   十二、题库练习 / 高频题 / 错题练习
-   ============================================================ */
 function initQuiz(mode) {
     if (mode === 'wrong') {
         const store = getWrongStore();
@@ -1055,13 +787,9 @@ function initQuiz(mode) {
 }
 
 function updateBtnActive(activeId) {
-    const btns = ['startPracticeBtn', 'startVipPracticeBtn', 'startFeaturedBtn', 'startExamBtn', 'startWrongBtn'];
-    btns.forEach(id => {
+    ['startPracticeBtn', 'startVipPracticeBtn', 'startFeaturedBtn', 'startExamBtn', 'startWrongBtn'].forEach(id => {
         const btn = $(id);
-        if (btn) {
-            if (id === activeId) btn.classList.add('active');
-            else btn.classList.remove('active');
-        }
+        if (btn) activeId === id ? btn.classList.add('active') : btn.classList.remove('active');
     });
 }
 
@@ -1074,22 +802,13 @@ function switchPanel(type) {
     $('wrongEmpty').style.display = 'none';
 
     if (type !== 'exam' && exam.active && exam.timer) {
-        clearInterval(exam.timer);
-        exam.timer = null;
+        clearInterval(exam.timer); exam.timer = null;
         exam.timeLeft = Math.max(0, Math.round((examEndTime - Date.now()) / 1000));
-        if (exam.timeLeft <= 0) {
-            doSubmitExam(true);
-            $('examResult').classList.add('hidden');
-            showToast('考试时间到，已自动交卷；点「开始模拟考试」可查看成绩');
-        }
+        if (exam.timeLeft <= 0) { doSubmitExam(true); $('examResult').classList.add('hidden'); }
     }
 
     if (type === 'practice' || type === 'vip') {
-        if (type === 'vip' && (!banks.vip || banks.vip.length === 0)) {
-            showToast('该工种暂无 VIP 题库，请联系管理员补充');
-            updateBtnActive(null);
-            return;
-        }
+        if (type === 'vip' && (!banks.vip || banks.vip.length === 0)) { showToast('该工种暂无 VIP 题库'); updateBtnActive(null); return; }
         currentQuizMode = type;
         if (quiz[type].list.length === 0) initQuiz(type);
         if (quiz[type].list.length > 0) {
@@ -1105,116 +824,75 @@ function switchPanel(type) {
             updateBtnActive('startFeaturedBtn');
         }
     } else if (type === 'wrong') {
-        const store = getWrongStore();
-        if (!store.length) {
-            $('wrongEmpty').style.display = 'block';
-            updateBtnActive(null);
-            return;
-        }
+        if (!getWrongStore().length) { $('wrongEmpty').style.display = 'block'; updateBtnActive(null); return; }
         if (quiz.wrong.list.length === 0) initQuiz('wrong');
         $('wrongInfo').classList.remove('hidden');
-        updateWrongHint();
-        renderQuiz('wrong');
-        updateBtnActive('startWrongBtn');
+        updateWrongHint(); renderQuiz('wrong'); updateBtnActive('startWrongBtn');
     } else if (type === 'exam') {
         if (!exam.active) {
-            if (exam.list.length > 0) {
-                $('examResult').classList.remove('hidden');
-                updateBtnActive(null);
-                return;
-            }
+            if (exam.list.length > 0) { $('examResult').classList.remove('hidden'); updateBtnActive(null); return; }
             const seen = new Set(); const merged = [];
-            [...banks.practice, ...banks.featured].forEach(q => { if (seen.has(q.question)) return; seen.add(q.question); merged.push(q); });
+            [...banks.practice, ...banks.featured].forEach(q => { if (!seen.has(q.question)) { seen.add(q.question); merged.push(q); } });
             if (merged.length < 10) { showToast('题库题目太少，无法开始考试'); return; }
-            const count = Math.min(EXAM_MAX_Q, merged.length);
-            exam.list = shuffle(merged).slice(0, count);
+            exam.list = shuffle(merged).slice(0, Math.min(EXAM_MAX_Q, merged.length));
             exam.index = 0; exam.ans = {}; exam.rev = {};
-            exam.timeLeft = EXAM_MINUTES * 60;
-            exam.active = true;
-
+            exam.timeLeft = EXAM_MINUTES * 60; exam.active = true;
             examEndTime = Date.now() + exam.timeLeft * 1000;
-
+            
             if (exam.timer) clearInterval(exam.timer);
             exam.timer = setInterval(() => {
-                const now = Date.now();
-                exam.timeLeft = Math.max(0, Math.round((examEndTime - now) / 1000));
+                exam.timeLeft = Math.max(0, Math.round((examEndTime - Date.now()) / 1000));
                 updateTimerDisplay();
-                if (exam.timeLeft <= 0) {
-                    clearInterval(exam.timer);
-                    exam.timer = null;
-                    doSubmitExam(true);
-                }
+                if (exam.timeLeft <= 0) { clearInterval(exam.timer); exam.timer = null; doSubmitExam(true); }
             }, 1000);
             updateTimerDisplay();
-        } else {
-            if (!exam.timer) {
-                if (exam.timeLeft <= 0) {
-                    doSubmitExam(true);
-                    return;
-                }
-                examEndTime = Date.now() + exam.timeLeft * 1000;
-                exam.timer = setInterval(() => {
-                    const now = Date.now();
-                    exam.timeLeft = Math.max(0, Math.round((examEndTime - now) / 1000));
-                    updateTimerDisplay();
-                    if (exam.timeLeft <= 0) {
-                        clearInterval(exam.timer);
-                        exam.timer = null;
-                        doSubmitExam(true);
-                    }
-                }, 1000);
+        } else if (!exam.timer) {
+            if (exam.timeLeft <= 0) { doSubmitExam(true); return; }
+            examEndTime = Date.now() + exam.timeLeft * 1000;
+            exam.timer = setInterval(() => {
+                exam.timeLeft = Math.max(0, Math.round((examEndTime - Date.now()) / 1000));
                 updateTimerDisplay();
-            }
+                if (exam.timeLeft <= 0) { clearInterval(exam.timer); exam.timer = null; doSubmitExam(true); }
+            }, 1000);
+            updateTimerDisplay();
         }
         $('examInfo').classList.remove('hidden');
-        renderExam();
-        updateBtnActive('startExamBtn');
+        renderExam(); updateBtnActive('startExamBtn');
     }
 }
 
 function restartQuiz(mode) {
     if (mode === 'wrong') {
         const store = getWrongStore();
-        if (!store.length) { showToast('错题本是空的，无法重新开始'); return; }
+        if (!store.length) { showToast('错题本是空的'); return; }
         quiz.wrong.list = shuffle(store).map(item => ({ uid: nextUid(), question: item.question, options: item.options || [], correctAnswer: item.correctAnswer, type: item.type || '' }));
     } else {
         const bank = banks[mode];
-        if (!bank || !bank.length) { showToast('题库未加载，无法重新开始'); return; }
+        if (!bank || !bank.length) { showToast('题库未加载'); return; }
         quiz[mode].list = shuffle(bank);
     }
     const s = quiz[mode];
     s.index = 0; s.ans = {}; s.sub = {}; s.rev = {};
-    showToast('已重新开始本次练习');
-
-    if (mode === 'wrong') {
-        $('wrongInfo').classList.remove('hidden');
-    } else if (mode === 'featured') {
-        $('featuredInfo').classList.remove('hidden');
-    } else {
-        $('practiceInfo').classList.remove('hidden');
-    }
+    showToast('已重新开始');
+    if (mode === 'wrong') $('wrongInfo').classList.remove('hidden');
+    else if (mode === 'featured') $('featuredInfo').classList.remove('hidden');
+    else $('practiceInfo').classList.remove('hidden');
     renderQuiz(mode);
 }
 
-function updateWrongHint() {
-    const total = getWrongStore().length;
-    const hint = $('wrongHint');
-    if (hint) hint.textContent = `📌 错题本共 ${total} 题，答题正确将自动从错题本移除`;
-}
-
 function renderQuiz(mode) {
-    const s = quiz[mode]; const ui = QUIZ_UI[mode]; const q = s.list[s.index];
+    const s = quiz[mode], ui = QUIZ_UI[mode], q = s.list[s.index];
     if (!q) return;
-    const submitted = !!s.sub[q.uid]; const revealed = !!s.rev[q.uid]; const userAns = s.ans[q.uid] || '';
+    const submitted = !!s.sub[q.uid], revealed = !!s.rev[q.uid], userAns = s.ans[q.uid] || '';
     $(ui.container).innerHTML = buildQuestionHtml(q, s.index, s.list.length, { userAns, submitted, showResult: submitted || revealed });
     $(ui.progress).textContent = `第 ${s.index + 1} 题 / 共 ${s.list.length} 题`;
-    $(ui.container).querySelectorAll('.option').forEach(el => { el.addEventListener('click', () => window.pickOption(mode, el.dataset.letter)); });
-    if (ui.answerBtn) { const btn = $(ui.answerBtn); btn.textContent = revealed ? '🙈 隐藏答案' : '💡 显示答案'; }
+    $(ui.container).querySelectorAll('.option').forEach(el => el.addEventListener('click', () => window.pickOption(mode, el.dataset.letter)));
+    if (ui.answerBtn) $(ui.answerBtn).textContent = revealed ? '🙈 隐藏答案' : '💡 显示答案';
     $(ui.prevBtn).disabled = s.index === 0; $(ui.nextBtn).disabled = s.index >= s.list.length - 1;
 }
 
 function goQuiz(mode, delta) {
-    const s = quiz[mode]; const q = s.list[s.index];
+    const s = quiz[mode], q = s.list[s.index];
     if (q && !s.sub[q.uid] && (s.ans[q.uid] || '').trim() !== '') submitQuizAnswer(mode, true);
     const next = s.index + delta;
     if (next < 0 || next >= s.list.length) return;
@@ -1222,7 +900,7 @@ function goQuiz(mode, delta) {
 }
 
 function submitQuizAnswer(mode, silent = false) {
-    const s = quiz[mode]; const q = s.list[s.index];
+    const s = quiz[mode], q = s.list[s.index];
     if (!q || s.sub[q.uid]) return true;
     const userAns = s.ans[q.uid] || '';
     if (!userAns) { if (!silent) showToast('请先选择答案'); return false; }
@@ -1230,6 +908,7 @@ function submitQuizAnswer(mode, silent = false) {
     const correct = toLetters(q.correctAnswer, q.options);
     const mine = toLetters(userAns, q.options);
     const isRight = correct && mine && correct === mine;
+    
     if (mode === 'wrong') {
         if (isRight) { removeWrongQuestion(q.question); refreshWrongBadge(); updateWrongHint(); }
     } else {
@@ -1240,14 +919,13 @@ function submitQuizAnswer(mode, silent = false) {
 }
 
 function toggleQuizAnswer(mode) {
-    const s = quiz[mode]; const q = s.list[s.index];
+    const s = quiz[mode], q = s.list[s.index];
     if (!q) return;
-    s.rev[q.uid] = !s.rev[q.uid];
-    renderQuiz(mode);
+    s.rev[q.uid] = !s.rev[q.uid]; renderQuiz(mode);
 }
 
 /* ============================================================
-   十三、模拟考试
+   考试与统计逻辑
    ============================================================ */
 function updateTimerDisplay() {
     const m = Math.floor(exam.timeLeft / 60), s = exam.timeLeft % 60;
@@ -1259,12 +937,10 @@ function updateTimerDisplay() {
 function renderExam() {
     const q = exam.list[exam.index];
     if (!q) return;
-    const revealed = !!exam.rev[q.uid]; const userAns = exam.ans[q.uid] || '';
-    let extraHtml = '';
-    if (userAns && !revealed) extraHtml = `<div class="selected-options">已选择：${userAns.split('').join('、')}</div>`;
-
+    const revealed = !!exam.rev[q.uid], userAns = exam.ans[q.uid] || '';
+    let extraHtml = (userAns && !revealed) ? `<div class="selected-options">已选择：${userAns.split('').join('、')}</div>` : '';
     $('examContainer').innerHTML = buildQuestionHtml(q, exam.index, exam.list.length, { userAns, submitted: false, showResult: revealed, extraHtml });
-    $('examContainer').querySelectorAll('.option').forEach(el => { el.addEventListener('click', () => window.pickOption('exam', el.dataset.letter)); });
+    $('examContainer').querySelectorAll('.option').forEach(el => el.addEventListener('click', () => window.pickOption('exam', el.dataset.letter)));
     $('examProgress').textContent = `第 ${exam.index + 1} 题 / 共 ${exam.list.length} 题`;
     $('examPrevBtn').disabled = exam.index === 0; $('examNextBtn').disabled = exam.index >= exam.list.length - 1;
     $('examAnswerBtn').textContent = revealed ? '🙈 隐藏答案' : '💡 显示答案';
@@ -1273,8 +949,7 @@ function renderExam() {
 function toggleExamAnswer() {
     const q = exam.list[exam.index];
     if (!q) return;
-    exam.rev[q.uid] = !exam.rev[q.uid];
-    renderExam();
+    exam.rev[q.uid] = !exam.rev[q.uid]; renderExam();
 }
 
 function submitExam() { if (!exam.active) return; showConfirm('确定提前交卷吗？', () => doSubmitExam(false)); }
@@ -1286,8 +961,7 @@ function doSubmitExam(auto) {
     if (auto) showToast('考试时间到，已自动交卷！');
 
     const usedSeconds = EXAM_MINUTES * 60 - Math.max(0, exam.timeLeft);
-    let correctCount = 0;
-    let unansweredCount = 0;
+    let correctCount = 0, unansweredCount = 0;
     const wrongList = [];
 
     exam.list.forEach(q => {
@@ -1295,20 +969,15 @@ function doSubmitExam(auto) {
         if (!mine) { unansweredCount++; return; }
         const correct = toLetters(q.correctAnswer, q.options);
         const userLetters = toLetters(mine, q.options);
-        if (correct && userLetters === correct) {
-            correctCount++;
-        } else {
-            wrongList.push(q);
-        }
+        if (correct && userLetters === correct) correctCount++;
+        else wrongList.push(q);
     });
 
     saveWrongQuestions(wrongList); refreshWrongBadge();
     const pct = Math.round((correctCount / exam.list.length) * 100);
     const passed = pct >= PASS_SCORE;
     saveScoreRecord(pct, correctCount, exam.list.length, usedSeconds); renderScoreHistory();
-    $('examInfo').classList.add('hidden');
-
-    updateBtnActive(null);
+    $('examInfo').classList.add('hidden'); updateBtnActive(null);
 
     const resultEl = $('examResult'); resultEl.classList.remove('hidden');
     const totalWrong = exam.list.length - correctCount;
@@ -1322,7 +991,7 @@ function doSubmitExam(auto) {
             <div>📖 总题数：${exam.list.length} 题</div>
             <div>⏱️ 用时：${formatDuration(usedSeconds)}</div>
             <div>🎯 及格线：${PASS_SCORE} 分</div>
-            ${wrongList.length ? `<div style="color:#fa541c;margin-top:8px;">⚠️ 本次答错 ${wrongList.length} 题已加入「错题练习」（未作答不计入）</div>` : ''}
+            ${wrongList.length ? `<div style="color:#fa541c;margin-top:8px;">⚠️ 本次答错 ${wrongList.length} 题已加入「错题练习」</div>` : ''}
         </div>
         <button class="exam-btn-control" id="resetExamBtn">重新考试</button>
     `;
@@ -1331,17 +1000,12 @@ function doSubmitExam(auto) {
 
 function resetExam() {
     $('examResult').classList.add('hidden');
-    exam.active = false;
-    exam.list = [];
-    exam.ans = {}; exam.rev = {}; exam.index = 0;
+    exam.active = false; exam.list = []; exam.ans = {}; exam.rev = {}; exam.index = 0;
     exam.timeLeft = EXAM_MINUTES * 60; examEndTime = 0;
     $('examTimer').style.color = '#1890ff'; $('examTimer').textContent = `${String(EXAM_MINUTES).padStart(2, '0')}:00`;
     updateBtnActive(null);
 }
 
-/* ============================================================
-   十四、成绩统计
-   ============================================================ */
 function scoreHistoryKey() { return 'thk_scores_' + (currentUser ? currentUser.phone : 'default'); }
 function getScoreHistory() {
     try { const raw = storageGet(scoreHistoryKey()); if (!raw) return []; const arr = JSON.parse(raw); return Array.isArray(arr) ? arr : []; } catch (e) { return []; }
@@ -1355,67 +1019,138 @@ function saveScoreRecord(pct, correct, total, duration) {
 
 function renderScoreHistory() {
     const history = getScoreHistory(); const content = $('scoreHistoryContent');
-    if (!history.length) { content.innerHTML = `<div class="score-empty"><span class="big">📊</span>暂无成绩记录<br><small style="color:#bbb;">完成一次模拟考试（交卷）后，成绩会自动记录在这里，最多保留最近 20 次</small></div>`; return; }
+    if (!history.length) { content.innerHTML = `<div class="score-empty"><span class="big">📊</span>暂无成绩记录<br><small style="color:#bbb;">完成一次模拟考试后，成绩会自动记录（最多保留20次）</small></div>`; return; }
     const avg = Math.round(history.reduce((s, h) => s + h.score, 0) / history.length);
     const passCount = history.filter(h => h.score >= PASS_SCORE).length;
-    const maxScore = Math.max(...history.map(h => h.score));
-    const minScore = Math.min(...history.map(h => h.score));
+    const maxScore = Math.max(...history.map(h => h.score)), minScore = Math.min(...history.map(h => h.score));
     const maxVal = Math.max(...history.map(h => h.score), 100);
+    
     let trend = '<div class="score-trend">';
-    history.forEach(h => { const height = Math.max((h.score / maxVal) * 100, 5); const cls = h.score >= PASS_SCORE ? 'pass-bar' : 'fail-bar'; trend += `<div class="bar ${cls}" style="height:${height}%"><span>${h.score}</span></div>`; });
+    history.forEach(h => { 
+        const height = Math.max((h.score / maxVal) * 100, 5); 
+        const cls = h.score >= PASS_SCORE ? 'pass-bar' : 'fail-bar'; 
+        trend += `<div class="bar ${cls}" style="height:${height}%"><span>${h.score}</span></div>`; 
+    });
     trend += '</div>';
+    
     const summary = `<div class="score-summary"><div><span class="num">${avg}</span>平均分</div><div><span class="num">${passCount}/${history.length}</span>通过次数</div><div><span class="num">${maxScore}</span>最高分</div><div><span class="num">${minScore}</span>最低分</div></div>`;
     let table = '<table class="score-table"><tr><th>序号</th><th>日期</th><th>成绩</th><th>用时</th><th>正确/总数</th><th>结果</th></tr>';
-    const reversed = history.slice().reverse();
-    reversed.forEach((h, i) => {
+    history.slice().reverse().forEach((h, i) => {
         const d = new Date(h.time);
         const dateStr = `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-        const passed = h.score >= PASS_SCORE; const cls = passed ? 'pass' : 'fail';
-        const durStr = h.duration != null ? formatDuration(h.duration) : '—';
-        table += `<tr><td>${i + 1}</td><td>${dateStr}</td><td class="${cls}">${h.score}分</td><td>${durStr}</td><td>${h.correct}/${h.total}</td><td class="${cls}">${passed ? '通过' : '未通过'}</td></tr>`;
+        const passed = h.score >= PASS_SCORE, cls = passed ? 'pass' : 'fail';
+        table += `<tr><td>${i + 1}</td><td>${dateStr}</td><td class="${cls}">${h.score}分</td><td>${formatDuration(h.duration)}</td><td>${h.correct}/${h.total}</td><td class="${cls}">${passed ? '通过' : '未通过'}</td></tr>`;
     });
     table += '</table>';
     content.innerHTML = trend + summary + table;
 }
 
 /* ============================================================
-   十五、错题本
+   初始化与事件绑定
    ============================================================ */
-function wrongKey() { return 'thk_wrong_' + (currentUser ? currentUser.phone : 'default'); }
-function getWrongStore() {
-    try { const raw = storageGet(wrongKey()); if (!raw) return []; const arr = JSON.parse(raw); return Array.isArray(arr) ? arr : []; } catch (e) { return []; }
+function checkLogin() {
+    const phone = $('phoneInput').value.trim(), code = $('codeInput').value.trim();
+    $('loginError').style.display = 'none';
+    if (!/^1[3-9]\d{9}$/.test(phone)) return showLoginError('请输入正确的11位手机号');
+    if (code !== phone.slice(-6)) return showLoginError('密码错误（应为手机号后6位）');
+    const user = findUser(phone);
+    const v = validateUser(user);
+    if (!v.ok) return showLoginError(v.msg);
+    loginSuccess(user);
 }
-function setWrongStore(arr) { storageSet(wrongKey(), JSON.stringify(arr)); }
-function saveWrongQuestions(list) {
-    if (!list || !list.length) return;
-    const store = getWrongStore(); const existing = new Set(store.map(q => (q.question || '').slice(0, 80)));
-    list.forEach(q => {
-        const key = (q.question || '').slice(0, 80); if (!key || existing.has(key)) return;
-        store.push({ question: q.question, options: q.options, correctAnswer: q.correctAnswer, type: q.type || '', addTime: Date.now() });
-        existing.add(key);
-    });
-    setWrongStore(store);
+
+function showLoginError(msg) {
+    const el = $('loginError'); el.textContent = msg; el.style.display = 'block';
 }
-function removeWrongQuestion(questionText) {
-    const store = getWrongStore(); const key = (questionText || '').slice(0, 80);
-    const filtered = store.filter(q => (q.question || '').slice(0, 80) !== key);
-    if (filtered.length !== store.length) setWrongStore(filtered);
+
+function loginSuccess(user) {
+    currentUser = user;
+    __mySessionId = Date.now() + '_' + Math.random();
+    storageSet('thk_active_' + user.phone, __mySessionId);
+    storageSet('thk_session', JSON.stringify({ phone: user.phone, sessionEnd: Date.now() + SESSION_DAYS * 86400000 }));
+
+    $('passwordModal').style.display = 'none';
+    $('mainContent').style.display = 'block';
+    $('userInfo').style.display = 'flex';
+    $('userName').textContent = user.name;
+
+    const selector = $('jobSelector');
+    const userJobs = Array.isArray(user.jobs) ? user.jobs.filter(Boolean) : [];
+
+    if (user.isAdmin || userJobs.length > 1) {
+        $('userJob').style.display = 'none'; selector.style.display = 'inline-block'; selector.innerHTML = '';
+        const jobList = user.isAdmin ? Object.keys(BANK_CONFIG) : userJobs;
+        jobList.forEach(job => { const opt = document.createElement('option'); opt.value = job; opt.textContent = job; selector.appendChild(opt); });
+        const jobCacheKey = user.isAdmin ? 'thk_admin_job' : ('thk_user_job_' + user.phone);
+        let savedJob = storageGet(jobCacheKey);
+        if (!savedJob || jobList.indexOf(savedJob) === -1) savedJob = jobList[0];
+        selector.value = savedJob;
+        selector.onchange = (e) => {
+            const newJob = e.target.value;
+            storageSet(jobCacheKey, newJob); showToast('已切换至：' + newJob);
+            if (!user.isAdmin) { currentUser.job = newJob; quiz.practice = newQuiz(); quiz.featured = newQuiz(); quiz.vip = newQuiz(); }
+            resetAllPanels(); loadBanksForJob(newJob);
+        };
+        loadBanksForJob(savedJob);
+    } else {
+        $('userJob').style.display = 'inline-block'; $('userJob').textContent = user.job;
+        selector.style.display = 'none'; selector.onchange = null;
+        loadBanksForJob(user.job);
+    }
+
+    const expInfo = calculateUserExpire(user);
+    $('validityInfo').style.display = 'inline-block';
+    if (expInfo.isLongTerm) {
+        $('validityDate').textContent = '长期有效'; $('remainingDays').textContent = '长期';
+    } else {
+        $('validityDate').textContent = expInfo.expireStr;
+        $('remainingDays').textContent = Math.max(0, daysBetween(new Date(), expInfo.expireDate));
+    }
+
+    if (!isPersistentStorage()) $('storageWarn').style.display = 'block';
+    refreshWrongBadge(); renderScoreHistory();
 }
-function refreshWrongBadge() {
-    const count = getWrongStore().length; const badge = $('wrongCountBadge');
-    if (count > 0) { badge.textContent = count; badge.style.display = 'inline-block'; } else { badge.style.display = 'none'; }
+
+function logout() { showConfirm('确定退出登录吗？', doLogout); }
+function doLogout() {
+    try {
+        const keysToRemove = [];
+        for (let i = 0; i < window.localStorage.length; i++) {
+            const k = window.localStorage.key(i);
+            if (k && (k.startsWith('thk_practice_') || k.startsWith('thk_featured_') || k.startsWith('thk_vip_'))) keysToRemove.push(k);
+        }
+        keysToRemove.forEach(k => window.localStorage.removeItem(k));
+    } catch (e) {}
+    storageRemove('thk_session');
+    if (currentUser) storageRemove('thk_active_' + currentUser.phone);
+    __mySessionId = null;
+    if (exam.timer) { clearInterval(exam.timer); exam.timer = null; }
+    exam.active = false; exam.list = []; exam.ans = {}; exam.rev = {}; exam.index = 0;
+    exam.timeLeft = EXAM_MINUTES * 60; examEndTime = 0;
+    currentUser = null; banks.practice = []; banks.featured = []; banks.vip = [];
+    quiz.practice = newQuiz(); quiz.featured = newQuiz(); quiz.wrong = newQuiz(); quiz.vip = newQuiz();
+    $('examResult').innerHTML = ''; $('examResult').classList.add('hidden');
+    $('passwordModal').style.display = 'flex'; $('mainContent').style.display = 'none';
+    $('userInfo').style.display = 'none'; $('validityInfo').style.display = 'none'; $('storageWarn').style.display = 'none';
+    $('phoneInput').value = ''; $('codeInput').value = ''; $('loginError').style.display = 'none';
+    try { $('phoneInput').focus(); } catch (e) {}
+    resetAllPanels();
 }
-function clearWrongBook() { showConfirm('确定清空错题本吗？此操作不可恢复。', doClearWrongBook); }
-function doClearWrongBook() {
-    setWrongStore([]); refreshWrongBadge();
-    quiz.wrong.list = []; $('wrongInfo').classList.add('hidden'); $('wrongEmpty').style.display = 'block';
-    showToast('错题本已清空');
+
+function resetAllPanels() {
+    if (exam.timer) { clearInterval(exam.timer); exam.timer = null; }
+    exam.active = false; exam.list = []; exam.ans = {}; exam.rev = {}; exam.index = 0;
+    exam.timeLeft = EXAM_MINUTES * 60; examEndTime = 0;
+    $('bankInfo').innerHTML = '📚 正在加载题库...';
+    $('practiceInfo').classList.add('hidden'); $('featuredInfo').classList.add('hidden'); $('examInfo').classList.add('hidden');
+    $('examResult').classList.add('hidden'); $('examResult').innerHTML = '';
+    $('wrongInfo').classList.add('hidden'); $('wrongEmpty').style.display = 'none'; $('wrongCountBadge').style.display = 'none';
+    $('practiceContainer').innerHTML = ''; $('featuredContainer').innerHTML = ''; $('examContainer').innerHTML = ''; $('wrongContainer').innerHTML = '';
+    $('scoreHistoryContent').innerHTML = '';
+    $('examTimer').textContent = `${String(EXAM_MINUTES).padStart(2, '0')}:00`; $('examTimer').style.color = '#1890ff';
     updateBtnActive(null);
 }
 
-/* ============================================================
-   十六、事件绑定
-   ============================================================ */
 function bindEvents() {
     $('loginBtn').addEventListener('click', checkLogin);
     $('phoneInput').addEventListener('keydown', e => { if (e.key === 'Enter') $('codeInput').focus(); });
@@ -1423,15 +1158,10 @@ function bindEvents() {
     $('logoutBtn').addEventListener('click', logout);
 
     $('startPracticeBtn').addEventListener('click', () => switchPanel('practice'));
-
     $('startVipPracticeBtn').addEventListener('click', () => {
-        if (!currentUser || (!currentUser.isAdmin && !currentUser.isVIP)) {
-            showConfirm('你还不是VIP，请联系管理员', () => {});
-            return;
-        }
+        if (!currentUser || (!currentUser.isAdmin && !currentUser.isVIP)) { showConfirm('你还不是VIP，请联系管理员', () => {}); return; }
         switchPanel('vip');
     });
-
     $('practicePrevBtn').addEventListener('click', () => goQuiz(currentQuizMode, -1));
     $('practiceNextBtn').addEventListener('click', () => goQuiz(currentQuizMode, 1));
     $('practiceAnswerBtn').addEventListener('click', () => toggleQuizAnswer(currentQuizMode));
@@ -1457,44 +1187,12 @@ function bindEvents() {
 
     window.addEventListener('storage', (e) => {
         if (!currentUser) return;
-        const activeKey = 'thk_active_' + currentUser.phone;
-        if (e.key === activeKey) {
-            if (e.newValue !== __mySessionId) {
-                showToast('该账号已在其他窗口或设备登录，当前会话自动退出');
-                storageRemove('thk_session');
-                if (exam.timer) { clearInterval(exam.timer); exam.timer = null; }
-                exam.active = false;
-                exam.list = []; exam.ans = {}; exam.rev = {}; exam.index = 0;
-                exam.timeLeft = EXAM_MINUTES * 60; examEndTime = 0;
-                currentUser = null;
-                banks.practice = []; banks.featured = []; banks.vip = [];
-                quiz.practice = newQuiz(); quiz.featured = newQuiz(); quiz.wrong = newQuiz(); quiz.vip = newQuiz();
-                $('passwordModal').style.display = 'flex';
-                $('mainContent').style.display = 'none';
-                $('userInfo').style.display = 'none';
-                $('validityInfo').style.display = 'none';
-                $('storageWarn').style.display = 'none';
-                $('phoneInput').value = ''; $('codeInput').value = '';
-                $('loginError').style.display = 'none';
-                try { $('phoneInput').focus(); } catch (err) {}
-                resetAllPanels();
-            }
+        if (e.key === 'thk_active_' + currentUser.phone && e.newValue !== __mySessionId) {
+            showToast('该账号已在其他窗口登录，当前自动退出');
+            doLogout();
         }
     });
 }
-
-/* ============================================================
-   启动
-   ============================================================ */
-document.addEventListener('contextmenu', event => event.preventDefault());
-document.addEventListener('keydown', event => {
-    if (event.key === 'F12' ||
-        (event.ctrlKey && event.shiftKey && ['I', 'J', 'C'].includes(event.key.toUpperCase())) ||
-        (event.ctrlKey && event.key.toUpperCase() === 'U')) {
-        event.preventDefault();
-        return false;
-    }
-});
 
 async function boot() {
     const logoImg = $('appLogo');
@@ -1505,23 +1203,12 @@ async function boot() {
     $('loginError').style.color = '#1890ff';
     $('loginError').textContent = '正在准备用户名单，请稍候...';
 
-    const loadResult = await loadUsers(false);
-
-    $('loginError').style.color = '#ff4d4f';
-
+    const loadResult = await loadUsers();
     if (!loadResult.ok) {
         $('loginError').style.display = 'block';
         $('loginError').textContent = '⚠️ 名单加载失败，请检查网络后刷新页面重试';
-        console.error('名单加载失败', loadResult.error);
-    } else if (loadResult.stale) {
-        $('loginError').style.display = 'block';
-        $('loginError').style.color = '#ad6800';
-        $('loginError').textContent = '⚠️ 当前为离线缓存名单，可能不是最新，请刷新页面重试';
     } else {
         $('loginError').style.display = 'none';
-        const from = loadResult.fromEmbedded ? '内嵌名单'
-                   : (loadResult.fromCache ? '本地缓存' : loadResult.source);
-        console.log('当前名单人数：' + WHITELIST.length + '（来源：' + from + '）');
     }
 
     const token = new URLSearchParams(location.search).get('token');
