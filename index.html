@@ -250,7 +250,7 @@ h3 { font-size: 16px; margin-bottom: 10px; }
     </div>
 </div>
 
-<div class="version-info">v10.0.0</div>
+<div class="version-info">v10.1.0</div>
 
 <script>
 'use strict';
@@ -258,6 +258,64 @@ h3 { font-size: 16px; margin-bottom: 10px; }
 const LOGO_URL = 'https://i.postimg.cc/mkzHkLNd/THKlogo-3340-1-removebg-preview.png';
 
 const BUILD_TIME = new Date('2026-10-26T00:00:00').getTime();
+
+/* ============================================================
+   ★★★ 内嵌名单（方案A核心） ★★★
+   ------------------------------------------------------------
+   以后加人 / 删人 / 改工种，只改这个数组，保存刷新即生效：
+     { "phone": "11位手机号", "name": "姓名", "job": "工种",
+       "expire": "58", "isVIP": false, "isAdmin": false },
+
+   工种必须是以下 5 个之一（否则题库加载不到）：
+     安全管理员 / 场（厂）内专用车 / 流动式起重机 / 起重机指挥 / 起重机司机
+   管理员工种写 "管理员" 即可（登录后可下拉切换全部工种）。
+
+   注意：同一手机号可以有多行（代表多个工种），系统会自动合并。
+   ============================================================ */
+const EMBEDDED_USERS = [
+  { "phone": "13883636880", "name": "蒋燚",       "job": "场（厂）内专用车", "expire": "58", "isVIP": true,  "isAdmin": false },
+  { "phone": "18223287393", "name": "喻明生",     "job": "流动式起重机",     "expire": "58", "isVIP": true,  "isAdmin": false },
+  { "phone": "18502395010", "name": "王绪绅",     "job": "场（厂）内专用车", "expire": "58", "isVIP": true,  "isAdmin": false },
+  { "phone": "15683142989", "name": "唐海林",     "job": "场（厂）内专用车", "expire": "58", "isVIP": true,  "isAdmin": false },
+  { "phone": "15123855078", "name": "何中祥",     "job": "场（厂）内专用车", "expire": "58", "isVIP": true,  "isAdmin": false },
+  { "phone": "13594478252", "name": "贺小东",     "job": "流动式起重机",     "expire": "58", "isVIP": true,  "isAdmin": false },
+  { "phone": "13883636880", "name": "蒋燚",       "job": "流动式起重机",     "expire": "58", "isVIP": true,  "isAdmin": false },
+  { "phone": "13883636880", "name": "蒋燚",       "job": "起重机指挥",       "expire": "58", "isVIP": true,  "isAdmin": false },
+  { "phone": "13883636880", "name": "蒋燚",       "job": "起重机司机",       "expire": "58", "isVIP": true,  "isAdmin": false },
+  { "phone": "13883990010", "name": "绪祥二老板", "job": "流动式起重机",     "expire": "58", "isVIP": true,  "isAdmin": false },
+  { "phone": "18008383481", "name": "张振华",     "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "18323086322", "name": "杨建",       "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "17729657516", "name": "邓志军",     "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "18281884111", "name": "雷文平",     "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "17318425129", "name": "黄豪",       "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "18089655654", "name": "侯宇",       "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "18183031891", "name": "潘玉先",     "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "18983599689", "name": "喻方",       "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "15023750554", "name": "何忠强",     "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "15528807877", "name": "李伟",       "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "17783710172", "name": "邱令刚",     "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "15823415955", "name": "胡林",       "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "13368287318", "name": "宋波",       "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "15909355709", "name": "王定勇",     "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "15826053585", "name": "黄树雄",     "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "18696760484", "name": "梁清明",     "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "13594097002", "name": "谭炫",       "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "19937046381", "name": "丁增亚",     "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "13967489904", "name": "肖成群",     "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "17347997205", "name": "李滨兵",     "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "13350317978", "name": "张崧",       "job": "安全管理员",       "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "13983247811", "name": "苏美女",     "job": "管理员",           "expire": "长期", "isVIP": false, "isAdmin": true  },
+  { "phone": "15881938831", "name": "麻丝",       "job": "管理员",           "expire": "长期", "isVIP": false, "isAdmin": true  },
+  { "phone": "17726229918", "name": "杜建雄",     "job": "安全管理员",       "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "18375871792", "name": "张兴伟",     "job": "起重机司机",       "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "15023108714", "name": "肖靖军",     "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "15089334598", "name": "邱中华",     "job": "流动式起重机",     "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "19923241333", "name": "冉绍均",     "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "13896714837", "name": "刘安川",     "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false },
+  { "phone": "13072368572", "name": "谭文兵",     "job": "场（厂）内专用车", "expire": "38", "isVIP": false, "isAdmin": false },
+  { "phone": "18883772529", "name": "廖树洪",     "job": "场（厂）内专用车", "expire": "58", "isVIP": false, "isAdmin": false }
+  // ↑★★ 以后加人在这里加一行，末尾用逗号，最后一条不加逗号 ★★↑
+];
 
 /* ============================================================
    一、Storage 封装（自动回退内存存储）
@@ -301,7 +359,7 @@ function storageRemove(key) {
 function isPersistentStorage() { getStorage(); return __storageIsPersistent; }
 
 /* ============================================================
-   二、基础配置（名单加载加固版）
+   二、基础配置（内嵌名单优先，远程兜底）
    ============================================================ */
 let WHITELIST = [];
 
@@ -365,6 +423,14 @@ async function fetchUsersFromSource(baseUrl) {
 }
 
 async function loadUsers(forceRefresh) {
+    /* ★★★ 方案A核心：内嵌名单优先，命中则跳过缓存与网络，改完保存刷新即生效 ★★★ */
+    if (Array.isArray(EMBEDDED_USERS) && EMBEDDED_USERS.length > 0) {
+        WHITELIST = normalizeUsers(EMBEDDED_USERS);
+        console.log('✅ 名单来自内嵌，共 ' + WHITELIST.length + ' 条记录');
+        return { ok: true, fromEmbedded: true, count: WHITELIST.length };
+    }
+    /* 以下为兜底：内嵌为空时仍走原来的远程逻辑，不影响老流程 */
+
     if (!forceRefresh) {
         const cached = readUsersCache(false);
         if (cached) {
@@ -399,7 +465,7 @@ async function loadUsers(forceRefresh) {
 }
 
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/jrh168/thk-data@main/banks/';
-const BANK_DATA_VERSION = "v20261029_19";
+const BANK_DATA_VERSION = "v20261029_168";
 
 const BANK_CONFIG = {
     '安全管理员': { practice: 'anquan1-dtk.json',  featured: 'anquan2-ckt.json', vip: 'vip-anquan.json' },
@@ -699,7 +765,6 @@ function loginSuccess(user) {
     const selector = $('jobSelector');
     const userJobs = Array.isArray(user.jobs) ? user.jobs.filter(Boolean) : [];
 
-    // 管理员可选全部工种；普通用户若名单中有多个工种（如蒋燚），同样显示选择器
     if (user.isAdmin || userJobs.length > 1) {
         $('userJob').style.display = 'none';
         selector.style.display = 'inline-block';
@@ -713,7 +778,6 @@ function loginSuccess(user) {
             selector.appendChild(opt);
         });
 
-        // 管理员沿用原缓存键；普通用户按手机号单独缓存，避免互相影响
         const jobCacheKey = user.isAdmin ? 'thk_admin_job' : ('thk_user_job_' + user.phone);
         let savedJob = storageGet(jobCacheKey);
         if (!savedJob || jobList.indexOf(savedJob) === -1) savedJob = jobList[0];
@@ -725,7 +789,6 @@ function loginSuccess(user) {
             showToast('已切换至：' + newJob);
             if (!user.isAdmin) {
                 currentUser.job = newJob;
-                // 普通用户切换工种后重置练习进度，避免看到上一个工种的题目
                 quiz.practice = newQuiz();
                 quiz.featured = newQuiz();
                 quiz.vip = newQuiz();
@@ -1440,7 +1503,7 @@ async function boot() {
 
     $('loginError').style.display = 'block';
     $('loginError').style.color = '#1890ff';
-    $('loginError').textContent = '正在拉取用户名单，请稍候...';
+    $('loginError').textContent = '正在准备用户名单，请稍候...';
 
     const loadResult = await loadUsers(false);
 
@@ -1456,8 +1519,9 @@ async function boot() {
         $('loginError').textContent = '⚠️ 当前为离线缓存名单，可能不是最新，请刷新页面重试';
     } else {
         $('loginError').style.display = 'none';
-        console.log('当前名单人数：' + WHITELIST.length +
-            '（来源：' + (loadResult.fromCache ? '本地缓存' : loadResult.source) + '）');
+        const from = loadResult.fromEmbedded ? '内嵌名单'
+                   : (loadResult.fromCache ? '本地缓存' : loadResult.source);
+        console.log('当前名单人数：' + WHITELIST.length + '（来源：' + from + '）');
     }
 
     const token = new URLSearchParams(location.search).get('token');
